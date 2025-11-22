@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Support\Carbon;
 
 /**
@@ -21,7 +21,7 @@ use Illuminate\Support\Carbon;
  * @property-read Season $season
  * @property-read Team $team
  */
-class SeasonTeam extends Model
+class SeasonTeam extends Pivot
 {
     /**
      * The table associated with the model.

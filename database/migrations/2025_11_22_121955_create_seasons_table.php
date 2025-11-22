@@ -16,7 +16,7 @@ return new class extends Migration
             $table->id();
             $table->year('year')->unique();
             $table->string('name')->nullable();
-            $table->string('status')->default(SeasonStatusEnum::DRAFT->value);
+            $table->enum('status', SeasonStatusEnum::values())->default(SeasonStatusEnum::DRAFT->value);
             $table->date('start_date')->nullable();
             $table->date('end_date')->nullable();
             $table->timestamps();

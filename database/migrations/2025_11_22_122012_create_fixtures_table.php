@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreignId('away_team_id')->constrained('teams')->onDelete('cascade');
             $table->integer('home_score')->nullable();
             $table->integer('away_score')->nullable();
-            $table->boolean('is_played')->default(false);
+            $table->timestamp('played_at')->nullable();
             $table->timestamps();
 
             $table->unique(['season_id', 'week_number', 'home_team_id', 'away_team_id']);

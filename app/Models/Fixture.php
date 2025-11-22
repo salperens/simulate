@@ -19,7 +19,7 @@ use Illuminate\Support\Carbon;
  * @property int $away_team_id
  * @property int|null $home_score
  * @property int|null $away_score
- * @property bool $is_played
+ * @property Carbon|null $played_at
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  *
@@ -41,7 +41,7 @@ class Fixture extends Model
         'away_team_id',
         'home_score',
         'away_score',
-        'is_played',
+        'played_at',
     ];
 
     /**
@@ -53,7 +53,7 @@ class Fixture extends Model
         'week_number' => 'integer',
         'home_score'  => 'integer',
         'away_score'  => 'integer',
-        'is_played'   => 'boolean',
+        'played_at'   => 'datetime',
     ];
 
     /**
@@ -93,7 +93,7 @@ class Fixture extends Model
      */
     public function isPlayed(): bool
     {
-        return $this->is_played;
+        return $this->played_at !== null;
     }
 
     /**
@@ -103,7 +103,7 @@ class Fixture extends Model
      */
     public function getWinnerId(): ?int
     {
-        if (!$this->is_played || $this->home_score === null || $this->away_score === null) {
+        if ($this->played_at === null || $this->home_score === null || $this->away_score === null) {
             return null;
         }
 
@@ -125,7 +125,7 @@ class Fixture extends Model
      */
     public function getLoserId(): ?int
     {
-        if (!$this->is_played || $this->home_score === null || $this->away_score === null) {
+        if ($this->played_at === null || $this->home_score === null || $this->away_score === null) {
             return null;
         }
 
