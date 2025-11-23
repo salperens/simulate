@@ -138,7 +138,9 @@ Creates a new season.
 **Parameters:**
 - `year` (required): Season year
 - `name` (optional): Season name (defaults to "{year} Season")
-- `team_ids` (required, array): Array of team IDs to include in season
+- `team_ids` (required, array, min: 2): Array of team IDs to include in season
+
+**Note:** You can create seasons with any number of teams (minimum 2). For example, a 4-team league will generate 6 weeks of fixtures where each team plays every other team home and away in a round-robin format.
 
 **Response:**
 ```json

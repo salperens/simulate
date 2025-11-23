@@ -4,10 +4,10 @@ A football league simulation application built with Laravel and Vue.js.
 
 ## Features
 
-- **Season Management**: Create, start, and complete seasons
+- **Season Management**: Create, start, and complete seasons with flexible team count (minimum 2 teams, supports 4-team leagues as specified in requirements)
 - **Team Management**: Manage teams with power ratings and attributes
-- **Match Simulation**: Simulate matches with realistic outcomes
-- **Standings Calculation**: Automatic standings calculation with points, goal difference, and goals for
+- **Match Simulation**: Simulate matches with realistic outcomes based on team power, goalkeeper factor, supporter strength, and home advantage
+- **Standings Calculation**: Automatic standings calculation with points (3 for win, 1 for draw), goal difference, and goals for
 - **Championship Predictions**: Monte Carlo simulation for championship predictions (available in last 3 weeks)
 - **Match Result Editing**: Edit match results and recalculate standings (disabled for completed seasons)
 - **RESTful API**: Complete API for all operations
