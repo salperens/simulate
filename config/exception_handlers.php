@@ -1,6 +1,8 @@
 <?php
 
 use App\Exceptions\Handlers\DefaultExceptionHandler;
+use App\Exceptions\Handlers\FixtureNotFoundExceptionHandler;
+use App\Exceptions\Handlers\PredictionNotAvailableExceptionHandler;
 use App\Exceptions\Handlers\SeasonNotFoundExceptionHandler;
 use App\Exceptions\Handlers\ValidationExceptionHandler;
 
@@ -18,6 +20,8 @@ return [
 
     'handlers' => [
         ValidationExceptionHandler::class,
+        PredictionNotAvailableExceptionHandler::class,
+        FixtureNotFoundExceptionHandler::class,
         SeasonNotFoundExceptionHandler::class,
         DefaultExceptionHandler::class,
     ],

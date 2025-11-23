@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/standings', [StandingsController::class, 'index']);
 Route::get('/season/current', [SeasonController::class, 'current']);
 Route::get('/fixtures/week/{week}', [FixtureController::class, 'byWeek']);
+Route::put('/fixtures/{id}', [FixtureController::class, 'update']);
 Route::get('/predictions/week/{week}', [PredictionController::class, 'byWeek']);
 Route::get('/predictions/current', [PredictionController::class, 'current']);
 Route::post('/league/week/{week}/play', [PlayController::class, 'week']);
