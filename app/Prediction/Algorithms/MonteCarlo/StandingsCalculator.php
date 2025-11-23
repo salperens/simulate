@@ -55,7 +55,7 @@ readonly class StandingsCalculator
             );
         });
 
-        return collect($playedFixtures->all())->merge($simulated->all())->values();
+        return collect(array_merge($playedFixtures->all(), $simulated->all()));
     }
 
     private function calculateTeamStats(Team $team, Collection $allFixtures): TeamStandingData
