@@ -184,4 +184,3 @@ test('it calculates points correctly: 3 for win, 1 for draw, 0 for loss', functi
         ->and($team1Standing->drawn)->toBe(1)
         ->and($team1Standing->lost)->toBe(1);
 });
-

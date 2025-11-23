@@ -47,4 +47,3 @@ test('it returns correct season when multiple seasons exist', function () {
     expect($result->id)->toBe($season2024->id)
         ->and($result->year)->toBe(2024);
 });
-

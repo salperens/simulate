@@ -115,4 +115,3 @@ test('it generates fixtures for all teams', function () {
     // For 4 teams, round-robin should generate 12 fixtures (6 first half + 6 second half)
     expect($season->fixtures)->toHaveCount(12);
 });
-

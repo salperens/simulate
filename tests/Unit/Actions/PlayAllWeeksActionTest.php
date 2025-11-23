@@ -108,4 +108,3 @@ test('it returns zero when all fixtures are already played', function () {
 
     expect($result->matchesPlayed)->toBe(0);
 });
-

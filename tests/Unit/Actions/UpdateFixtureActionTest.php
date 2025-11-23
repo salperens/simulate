@@ -93,4 +93,3 @@ test('it recalculates standings correctly after score update', function () {
         ->and($team2Standing->won)->toBe(0)
         ->and($team2Standing->drawn)->toBe(1);
 });
-

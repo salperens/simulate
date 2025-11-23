@@ -84,4 +84,3 @@ test('it returns season data with all required fields', function () {
         ->and($seasonData->currentWeek)->toBe(1)
         ->and($seasonData->totalWeeks)->toBeGreaterThanOrEqual(0);
 });
-

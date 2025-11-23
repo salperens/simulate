@@ -136,4 +136,3 @@ test('it returns fixtures with scores when played', function () {
         ->and($foundFixture->awayScore)->toBe(1)
         ->and($foundFixture->playedAt)->not->toBeNull();
 });
-

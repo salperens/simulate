@@ -168,4 +168,3 @@ test('it creates fixtures with null scores initially', function () {
         ->and($fixtures->every(fn($fixture) => $fixture->away_score === null))->toBeTrue()
         ->and($fixtures->every(fn($fixture) => $fixture->played_at === null))->toBeTrue();
 });
-

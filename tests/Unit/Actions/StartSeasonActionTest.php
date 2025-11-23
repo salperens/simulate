@@ -97,4 +97,3 @@ test('it calculates current week correctly when starting season', function () {
     // No matches played yet, should be week 1
     expect($seasonData->currentWeek)->toBe(1);
 });
-

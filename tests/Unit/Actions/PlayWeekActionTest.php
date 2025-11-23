@@ -99,4 +99,3 @@ test('it returns correct number of matches played', function () {
     // For 2 teams, there should be 1 match per week
     expect($result->matchesPlayed)->toBe(1);
 });
-

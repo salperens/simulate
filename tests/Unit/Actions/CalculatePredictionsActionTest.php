@@ -187,4 +187,3 @@ test('it includes all teams in predictions', function () {
     expect($teamIds)->toContain($team1->id, $team2->id, $team3->id, $team4->id)
         ->and(count($teamIds))->toBe(4);
 });
-

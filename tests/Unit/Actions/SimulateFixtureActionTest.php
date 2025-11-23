@@ -141,4 +141,3 @@ test('it considers team power in simulation', function () {
         ->and($fixture->home_score)->toBeInt()
         ->and($fixture->away_score)->toBeInt();
 })->skip('Statistical power test requires multiple iterations - tested implicitly');
-

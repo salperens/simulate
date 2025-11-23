@@ -122,4 +122,3 @@ test('it does not simulate fixtures from other weeks', function () {
 
     expect($week2Fixtures->every(fn($fixture) => $fixture->played_at === null))->toBeTrue();
 });
-

@@ -69,4 +69,3 @@ test('it throws exception when season for year does not exist', function () {
     expect(fn() => $action->execute(null, 2099))
         ->toThrow(SeasonNotFoundException::class);
 });
-

@@ -143,4 +143,3 @@ test('it calculates current week correctly when completing season', function () 
 
     expect($seasonData->currentWeek)->toBe(1);
 });
-

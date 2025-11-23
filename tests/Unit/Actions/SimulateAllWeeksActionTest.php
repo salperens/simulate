@@ -147,4 +147,3 @@ test('it simulates fixtures in week order', function () {
 
     expect($playedWeeks->toArray())->toBe($weekNumbers->toArray());
 });
-
