@@ -34,6 +34,10 @@ readonly class CalculatePredictionsAction
     {
         $season = $this->getSeasonByIdOrCurrentAction->execute($seasonId, $year);
 
+        if (!$season->relationLoaded('teams')) {
+            $season->load('teams');
+        }
+
         $totalWeeks = $season->getTotalWeeks();
         $this->validatePredictionWindow($week, $totalWeeks);
 

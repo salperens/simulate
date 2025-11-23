@@ -109,6 +109,12 @@ test('it updates fixture result', function () {
     /** @var Fixture $fixture */
     $fixture = $season->fixtures()->first();
 
+    $fixture->update([
+        'home_score' => 1,
+        'away_score' => 0,
+        'played_at' => now(),
+    ]);
+
     $response = $this->putJson("/api/v1/fixtures/$fixture->id", [
         'home_score' => 3,
         'away_score' => 1,
@@ -153,6 +159,12 @@ test('it recalculates standings after updating fixture', function () {
 
     /** @var Fixture $fixture */
     $fixture = $season->fixtures()->first();
+
+    $fixture->update([
+        'home_score' => 1,
+        'away_score' => 0,
+        'played_at' => now(),
+    ]);
 
     $this->putJson("/api/v1/fixtures/$fixture->id", [
         'home_score' => 2,

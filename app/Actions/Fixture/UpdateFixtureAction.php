@@ -32,7 +32,7 @@ readonly class UpdateFixtureAction
      */
     public function execute(int $fixtureId, int $homeScore, int $awayScore): FixtureData
     {
-        $fixture = Fixture::with(['season', 'homeTeam', 'awayTeam'])->find($fixtureId);
+        $fixture = Fixture::with(['season.teams', 'homeTeam', 'awayTeam'])->find($fixtureId);
 
         if ($fixture === null) {
             throw FixtureNotFoundException::create($fixtureId);
@@ -46,6 +46,10 @@ readonly class UpdateFixtureAction
             'home_score' => $homeScore,
             'away_score' => $awayScore,
         ]);
+
+        if (!$fixture->season->relationLoaded('teams')) {
+            $fixture->season->load('teams');
+        }
 
         $this->recalculateStandings($fixture->season);
         $this->recalculatePredictions($fixture->season, $fixture->week_number);
@@ -84,13 +88,18 @@ readonly class UpdateFixtureAction
         $totalWeeks = $season->getTotalWeeks();
         $lastThreeWeeksStart = max(1, $totalWeeks - 2);
 
+        if ($weekNumber < $lastThreeWeeksStart) {
+            return;
+        }
+
         ChampionshipPrediction::query()
             ->where('season_id', $season->id)
             ->where('week_number', '>=', $weekNumber)
             ->where('week_number', '>=', $lastThreeWeeksStart)
             ->delete();
 
-        for ($week = $weekNumber; $week <= $totalWeeks; $week++) {
+        $startWeek = max($weekNumber, $lastThreeWeeksStart);
+        for ($week = $startWeek; $week <= $totalWeeks; $week++) {
             $this->calculatePredictionsIfApplicableAction->execute($season, $week);
         }
     }

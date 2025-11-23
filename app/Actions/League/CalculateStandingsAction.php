@@ -21,6 +21,10 @@ readonly class CalculateStandingsAction
      */
     public function execute(Season $season, ?int $week = null): Collection
     {
+        if (!$season->relationLoaded('teams')) {
+            $season->load('teams');
+        }
+
         $playedFixtures = $this->getPlayedFixtures($season, $week);
 
         $teamStandings = $season->teams

@@ -20,6 +20,10 @@ readonly class StandingsCalculator
      */
     public function calculate(PredictionContext $context, Collection $simulatedFixtures): Collection
     {
+        if (!$context->season->relationLoaded('teams')) {
+            $context->season->load('teams');
+        }
+
         $allFixtures = $this->mergeFixtures($context, $simulatedFixtures);
         $teams = $context->season->teams;
 
