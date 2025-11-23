@@ -2,30 +2,33 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Actions\League\GetSeasonByYearAction;
 use App\Actions\League\PlayAllWeeksAction;
 use App\Actions\League\PlayWeekAction;
+use App\Actions\Season\GetSeasonByIdOrCurrentAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\PlayWeekRequest;
 use App\Http\Resources\Api\V1\PlayAllResource;
 use App\Http\Resources\Api\V1\PlayWeekResource;
+use Illuminate\Http\Request;
 
 final class PlayController extends Controller
 {
     public function __construct(
-        private readonly GetSeasonByYearAction $getSeasonByYearAction,
-        private readonly PlayWeekAction        $playWeekAction,
-        private readonly PlayAllWeeksAction    $playAllWeeksAction,
+        private readonly GetSeasonByIdOrCurrentAction $getSeasonByIdOrCurrentAction,
+        private readonly PlayWeekAction               $playWeekAction,
+        private readonly PlayAllWeeksAction           $playAllWeeksAction,
     )
     {
     }
 
     /**
      * Play a specific week.
+     * If season_id is provided, use that season. Otherwise, use current season.
      */
-    public function week(PlayWeekRequest $request, int $week): PlayWeekResource
+    public function week(Request $request, PlayWeekRequest $playWeekRequest, int $week): PlayWeekResource
     {
-        $season = $this->getSeasonByYearAction->execute(now()->year);
+        $seasonId = $request->query('season_id');
+        $season = $this->getSeasonByIdOrCurrentAction->execute($seasonId !== null ? (int)$seasonId : null);
         $response = $this->playWeekAction->execute($season, $week);
 
         return new PlayWeekResource($response);
@@ -33,10 +36,12 @@ final class PlayController extends Controller
 
     /**
      * Play all remaining fixtures.
+     * If season_id is provided, use that season. Otherwise, use current season.
      */
-    public function all(): PlayAllResource
+    public function all(Request $request): PlayAllResource
     {
-        $season = $this->getSeasonByYearAction->execute(now()->year);
+        $seasonId = $request->query('season_id');
+        $season = $this->getSeasonByIdOrCurrentAction->execute($seasonId !== null ? (int)$seasonId : null);
         $response = $this->playAllWeeksAction->execute($season);
 
         return new PlayAllResource($response);
