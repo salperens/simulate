@@ -1,6 +1,6 @@
 <?php
 
-use App\Exceptions\League\SeasonNotFoundException;
+use App\Exceptions\ExceptionHandlerRegistry;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -17,11 +17,12 @@ return Application::configure(basePath: dirname(__DIR__))
         //
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        $exceptions->render(function (SeasonNotFoundException $e, Request $request) {
-            if ($request->is('api/*')) {
-                return response()->json([
-                    'message' => $e->getMessage(),
-                ], 404);
-            }
+        $handlerClasses = config('exception_handlers.handlers', []);
+        $handlers = array_map(fn (string $class) => app($class), $handlerClasses);
+
+        $registry = new ExceptionHandlerRegistry($handlers);
+
+        $exceptions->render(function (Throwable $e, Request $request) use ($registry) {
+            return $registry->handle($e, $request);
         });
     })->create();

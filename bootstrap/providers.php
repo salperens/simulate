@@ -2,5 +2,6 @@
 
 return [
     App\Providers\AppServiceProvider::class,
+    App\Providers\ExceptionHandlerServiceProvider::class,
     App\Providers\MatchSimulationServiceProvider::class,
 ];
