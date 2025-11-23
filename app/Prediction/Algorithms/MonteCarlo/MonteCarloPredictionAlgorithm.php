@@ -38,7 +38,7 @@ readonly class MonteCarloPredictionAlgorithm implements PredictionAlgorithm
     {
         $champion = $this->championFinder->find($context->standings);
 
-        $predictions = $context->standings->map(function ($standing) use ($champion) {
+        $predictions = $context->standings->map(function (TeamStandingData $standing) use ($champion) {
             return new TeamPredictionData(
                 teamId: $standing->id,
                 teamName: $standing->name,
