@@ -3,7 +3,7 @@
 namespace App\Actions\Prediction;
 
 use App\Actions\League\CalculateStandingsAction;
-use App\Actions\League\GetSeasonByYearAction;
+use App\Actions\Season\GetSeasonByIdOrCurrentAction;
 use App\Enums\Prediction\PredictionTypeEnum;
 use App\Exceptions\Prediction\PredictionNotAvailableException;
 use App\Models\ChampionshipPrediction;
@@ -15,9 +15,9 @@ use App\Prediction\PredictionResult;
 readonly class CalculatePredictionsAction
 {
     public function __construct(
-        private GetSeasonByYearAction    $getSeasonByYearAction,
-        private CalculateStandingsAction $calculateStandingsAction,
-        private PredictionAlgorithm      $predictionAlgorithm,
+        private GetSeasonByIdOrCurrentAction $getSeasonByIdOrCurrentAction,
+        private CalculateStandingsAction     $calculateStandingsAction,
+        private PredictionAlgorithm          $predictionAlgorithm,
     )
     {
     }
@@ -25,11 +25,11 @@ readonly class CalculatePredictionsAction
     public function execute(
         int                $week,
         ?int               $year = null,
+        ?int               $seasonId = null,
         PredictionTypeEnum $type = PredictionTypeEnum::CHAMPIONSHIP,
     ): PredictionResult
     {
-        $year = $year ?? now()->year;
-        $season = $this->getSeasonByYearAction->execute($year);
+        $season = $this->getSeasonByIdOrCurrentAction->execute($seasonId, $year);
 
         $totalWeeks = $season->getTotalWeeks();
         $this->validatePredictionWindow($week, $totalWeeks);

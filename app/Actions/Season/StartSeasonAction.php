@@ -2,21 +2,38 @@
 
 namespace App\Actions\Season;
 
-use App\Actions\League\GetSeasonByYearAction;
 use App\Data\Season\SeasonData;
+use App\Enums\Season\SeasonStatusEnum;
+use App\Exceptions\Season\ActiveSeasonExistsException;
+use App\Exceptions\Season\CannotStartSeasonException;
 use App\Models\Season;
 
-readonly class GetCurrentSeasonAction
+readonly class StartSeasonAction
 {
-    public function __construct(private GetSeasonByYearAction $getSeasonByYearAction)
+    public function execute(int $seasonId): SeasonData
     {
-    }
+        $this->validateNoActiveSeason();
 
-    public function execute(): SeasonData
-    {
-        $season = $this->getSeasonByYearAction->execute(now()->year);
+        $season = Season::findOrFail($seasonId);
+
+        if ($season->status !== SeasonStatusEnum::DRAFT) {
+            throw CannotStartSeasonException::notDraft();
+        }
+
+        $season->update([
+            'status' => SeasonStatusEnum::ACTIVE,
+        ]);
 
         return $this->createSeasonData($season);
+    }
+
+    private function validateNoActiveSeason(): void
+    {
+        $activeSeason = Season::where('status', SeasonStatusEnum::ACTIVE)->first();
+
+        if ($activeSeason !== null) {
+            throw ActiveSeasonExistsException::create($activeSeason);
+        }
     }
 
     private function createSeasonData(Season $season): SeasonData
@@ -49,4 +66,3 @@ readonly class GetCurrentSeasonAction
         return $lastPlayedWeek;
     }
 }
-

@@ -2,19 +2,33 @@
 
 namespace App\Actions\Season;
 
-use App\Actions\League\GetSeasonByYearAction;
 use App\Data\Season\SeasonData;
+use App\Enums\Season\SeasonStatusEnum;
+use App\Exceptions\Season\CannotCompleteSeasonException;
 use App\Models\Season;
 
-readonly class GetCurrentSeasonAction
+readonly class CompleteSeasonAction
 {
-    public function __construct(private GetSeasonByYearAction $getSeasonByYearAction)
+    public function execute(int $seasonId): SeasonData
     {
-    }
+        $season = Season::findOrFail($seasonId);
 
-    public function execute(): SeasonData
-    {
-        $season = $this->getSeasonByYearAction->execute(now()->year);
+        if ($season->status !== SeasonStatusEnum::ACTIVE) {
+            throw CannotCompleteSeasonException::notActive();
+        }
+
+        $totalWeeks = $season->getTotalWeeks();
+        $lastPlayedWeek = $season->fixtures()
+            ->whereNotNull('played_at')
+            ->max('week_number');
+
+        if ($lastPlayedWeek < $totalWeeks) {
+            throw CannotCompleteSeasonException::notAllMatchesPlayed();
+        }
+
+        $season->update([
+            'status' => SeasonStatusEnum::COMPLETED,
+        ]);
 
         return $this->createSeasonData($season);
     }
@@ -49,4 +63,3 @@ readonly class GetCurrentSeasonAction
         return $lastPlayedWeek;
     }
 }
-

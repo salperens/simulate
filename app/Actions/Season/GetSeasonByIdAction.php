@@ -2,19 +2,19 @@
 
 namespace App\Actions\Season;
 
-use App\Actions\League\GetSeasonByYearAction;
 use App\Data\Season\SeasonData;
+use App\Exceptions\League\SeasonNotFoundException;
 use App\Models\Season;
 
-readonly class GetCurrentSeasonAction
+readonly class GetSeasonByIdAction
 {
-    public function __construct(private GetSeasonByYearAction $getSeasonByYearAction)
+    public function execute(int $seasonId): SeasonData
     {
-    }
+        $season = Season::find($seasonId);
 
-    public function execute(): SeasonData
-    {
-        $season = $this->getSeasonByYearAction->execute(now()->year);
+        if ($season === null) {
+            throw SeasonNotFoundException::id($seasonId);
+        }
 
         return $this->createSeasonData($season);
     }
@@ -49,4 +49,3 @@ readonly class GetCurrentSeasonAction
         return $lastPlayedWeek;
     }
 }
-

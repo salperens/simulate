@@ -1,9 +1,13 @@
 <?php
 
+use App\Exceptions\Handlers\ActiveSeasonExistsExceptionHandler;
+use App\Exceptions\Handlers\CannotCompleteSeasonExceptionHandler;
+use App\Exceptions\Handlers\CannotStartSeasonExceptionHandler;
 use App\Exceptions\Handlers\DefaultExceptionHandler;
 use App\Exceptions\Handlers\FixtureNotFoundExceptionHandler;
 use App\Exceptions\Handlers\PredictionNotAvailableExceptionHandler;
 use App\Exceptions\Handlers\SeasonNotFoundExceptionHandler;
+use App\Exceptions\Handlers\SeasonYearAlreadyExistsExceptionHandler;
 use App\Exceptions\Handlers\ValidationExceptionHandler;
 
 return [
@@ -23,6 +27,10 @@ return [
         PredictionNotAvailableExceptionHandler::class,
         FixtureNotFoundExceptionHandler::class,
         SeasonNotFoundExceptionHandler::class,
+        ActiveSeasonExistsExceptionHandler::class,
+        SeasonYearAlreadyExistsExceptionHandler::class,
+        CannotStartSeasonExceptionHandler::class,
+        CannotCompleteSeasonExceptionHandler::class,
         DefaultExceptionHandler::class,
     ],
 ];

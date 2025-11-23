@@ -2,21 +2,20 @@
 
 namespace App\Actions\Season;
 
-use App\Actions\League\GetSeasonByYearAction;
 use App\Data\Season\SeasonData;
 use App\Models\Season;
+use Illuminate\Support\Collection;
 
-readonly class GetCurrentSeasonAction
+readonly class GetAllSeasonsAction
 {
-    public function __construct(private GetSeasonByYearAction $getSeasonByYearAction)
+    /**
+     * @return Collection<int, SeasonData>
+     */
+    public function execute(): Collection
     {
-    }
+        $seasons = Season::orderBy('year', 'desc')->get();
 
-    public function execute(): SeasonData
-    {
-        $season = $this->getSeasonByYearAction->execute(now()->year);
-
-        return $this->createSeasonData($season);
+        return $seasons->map(fn(Season $season) => $this->createSeasonData($season));
     }
 
     private function createSeasonData(Season $season): SeasonData
@@ -49,4 +48,3 @@ readonly class GetCurrentSeasonAction
         return $lastPlayedWeek;
     }
 }
-

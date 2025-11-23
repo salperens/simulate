@@ -6,6 +6,7 @@ use App\Actions\Prediction\CalculatePredictionsAction;
 use App\Actions\Season\GetCurrentSeasonAction;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\V1\PredictionResource;
+use Illuminate\Http\Request;
 
 final class PredictionController extends Controller
 {
@@ -18,10 +19,12 @@ final class PredictionController extends Controller
 
     /**
      * Get predictions for a specific week.
+     * If season_id is provided, use that season. Otherwise, use current season.
      */
-    public function byWeek(int $week): PredictionResource
+    public function byWeek(Request $request, int $week): PredictionResource
     {
-        $result = $this->calculatePredictionsAction->execute($week);
+        $seasonId = $request->query('season_id');
+        $result = $this->calculatePredictionsAction->execute($week, null, $seasonId !== null ? (int) $seasonId : null);
 
         return new PredictionResource($result);
     }

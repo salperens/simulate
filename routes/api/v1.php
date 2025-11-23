@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\V1\PlayController;
 use App\Http\Controllers\Api\V1\PredictionController;
 use App\Http\Controllers\Api\V1\SeasonController;
 use App\Http\Controllers\Api\V1\StandingsController;
+use App\Http\Controllers\Api\V1\TeamController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,6 +20,12 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/standings', [StandingsController::class, 'index']);
+Route::get('/teams', [TeamController::class, 'index']);
+Route::get('/seasons', [SeasonController::class, 'index']);
+Route::post('/seasons', [SeasonController::class, 'store']);
+Route::get('/seasons/{id}', [SeasonController::class, 'show']);
+Route::post('/seasons/{id}/start', [SeasonController::class, 'start']);
+Route::post('/seasons/{id}/complete', [SeasonController::class, 'complete']);
 Route::get('/season/current', [SeasonController::class, 'current']);
 Route::get('/fixtures/week/{week}', [FixtureController::class, 'byWeek']);
 Route::put('/fixtures/{id}', [FixtureController::class, 'update']);
