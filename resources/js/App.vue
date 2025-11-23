@@ -175,7 +175,7 @@ const handleCancelCreate = () => {
 
 const loadSeasonData = async () => {
   await Promise.all([
-    fetchStandings(),
+    fetchStandings(currentWeek.value),
     fetchWeekMatches(currentWeek.value),
   ])
 
@@ -192,7 +192,7 @@ const handlePlayWeek = async (week) => {
   try {
     await playWeekAction(week)
     await Promise.all([
-      fetchStandings(),
+      fetchStandings(week),
       fetchWeekMatches(week),
     ])
 
@@ -217,7 +217,7 @@ const handlePlayAll = async () => {
   try {
     await playAllAction()
     await Promise.all([
-      fetchStandings(),
+      fetchStandings(currentWeek.value),
       fetchWeekMatches(currentWeek.value),
     ])
 
@@ -235,7 +235,10 @@ const handlePlayAll = async () => {
 }
 
 const handleWeekChange = async (week) => {
-  await fetchWeekMatches(week)
+  await Promise.all([
+    fetchWeekMatches(week),
+    fetchStandings(week),
+  ])
   if (shouldShowPredictions.value) {
     await fetchPredictions(week)
   }

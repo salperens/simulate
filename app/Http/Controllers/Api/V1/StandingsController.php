@@ -21,13 +21,18 @@ final class StandingsController extends Controller
     /**
      * Get league standings for a season.
      * If season_id is provided, use that season. Otherwise, use current season.
+     * If week is provided, return standings up to and including that week.
      */
     public function index(Request $request): AnonymousResourceCollection
     {
         $seasonId = $request->query('season_id');
-        
+        $week = $request->query('week');
+
         $season = $this->getSeasonByIdOrCurrentAction->execute($seasonId !== null ? (int)$seasonId : null);
-        $standings = $this->calculateStandingsAction->execute($season);
+        $standings = $this->calculateStandingsAction->execute(
+            $season,
+            $week !== null ? (int)$week : null
+        );
 
         return TeamStandingResource::collection($standings);
     }

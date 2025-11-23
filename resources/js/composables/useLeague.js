@@ -15,12 +15,22 @@ export function useLeague() {
   const loadingTeams = ref(false)
   const loadingPredictions = ref(false)
 
-  const fetchStandings = async () => {
+  const fetchStandings = async (week = null) => {
     loading.value = true
     try {
-      const url = selectedSeason.value?.id 
-        ? `/api/v1/standings?season_id=${selectedSeason.value.id}`
-        : '/api/v1/standings'
+      const params = new URLSearchParams()
+      
+      if (selectedSeason.value?.id) {
+        params.append('season_id', selectedSeason.value.id)
+      }
+      
+      if (week !== null) {
+        params.append('week', week.toString())
+      }
+      
+      const queryString = params.toString()
+      const url = `/api/v1/standings${queryString ? `?${queryString}` : ''}`
+      
       const response = await axios.get(url)
       standings.value = response.data.data
     } catch (error) {
@@ -68,7 +78,7 @@ export function useLeague() {
       totalWeeks.value = seasonData.total_weeks || 6
       
       await Promise.all([
-        fetchStandings(),
+        fetchStandings(currentWeek.value),
         fetchWeekMatches(currentWeek.value),
       ])
       

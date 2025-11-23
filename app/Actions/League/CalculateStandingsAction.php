@@ -12,12 +12,16 @@ use Illuminate\Support\Collection;
 readonly class CalculateStandingsAction
 {
     /**
+     * Calculate standings for a season.
+     * If week is provided, only include fixtures up to and including that week.
+     *
      * @param Season $season
+     * @param int|null $week Optional week number to calculate standings up to
      * @return Collection<TeamStandingData>
      */
-    public function execute(Season $season): Collection
+    public function execute(Season $season, ?int $week = null): Collection
     {
-        $playedFixtures = $this->getPlayedFixtures($season);
+        $playedFixtures = $this->getPlayedFixtures($season, $week);
 
         $teamStandings = $season->teams
             ->map(fn(Team $team) => $this->calculateTeamStats($team, $playedFixtures))
@@ -26,12 +30,25 @@ readonly class CalculateStandingsAction
         return new Collection($teamStandings);
     }
 
-    private function getPlayedFixtures(Season $season): Collection
+    /**
+     * Get played fixtures for a season.
+     * If week is provided, only include fixtures up to and including that week.
+     *
+     * @param Season $season
+     * @param int|null $week Optional week number
+     * @return Collection<Fixture>
+     */
+    private function getPlayedFixtures(Season $season, ?int $week = null): Collection
     {
-        return $season->fixtures()
+        $query = $season->fixtures()
             ->whereNotNull('played_at')
-            ->with(['homeTeam', 'awayTeam'])
-            ->get();
+            ->with(['homeTeam', 'awayTeam']);
+
+        if ($week !== null) {
+            $query->where('week_number', '<=', $week);
+        }
+
+        return $query->get();
     }
 
     private function calculateTeamStats(Team $team, Collection $fixtures): TeamStandingData

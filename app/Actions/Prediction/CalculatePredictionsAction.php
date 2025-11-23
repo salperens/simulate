@@ -4,6 +4,7 @@ namespace App\Actions\Prediction;
 
 use App\Actions\League\CalculateStandingsAction;
 use App\Actions\Season\GetSeasonByIdOrCurrentAction;
+use App\Data\Prediction\TeamPredictionData;
 use App\Enums\Prediction\PredictionTypeEnum;
 use App\Exceptions\Prediction\PredictionNotAvailableException;
 use App\Models\ChampionshipPrediction;
@@ -34,9 +35,15 @@ readonly class CalculatePredictionsAction
         $totalWeeks = $season->getTotalWeeks();
         $this->validatePredictionWindow($week, $totalWeeks);
 
+        $existingPredictions = $this->getExistingPredictions($season->id, $week);
+        if ($existingPredictions !== null) {
+            return $existingPredictions;
+        }
+
         $standings = $this->calculateStandingsAction->execute($season);
 
         $remainingFixtures = $season->fixtures()
+            ->where('week_number', '>', $week)
             ->whereNull('played_at')
             ->with(['homeTeam', 'awayTeam'])
             ->get();
@@ -54,6 +61,39 @@ readonly class CalculatePredictionsAction
         $this->savePredictions($season, $result);
 
         return $result;
+    }
+
+    /**
+     * Get existing predictions from database for a specific week.
+     * Returns null if predictions don't exist.
+     */
+    private function getExistingPredictions(int $seasonId, int $week): ?PredictionResult
+    {
+        $predictions = ChampionshipPrediction::query()
+            ->where('season_id', $seasonId)
+            ->where('week_number', $week)
+            ->with('team')
+            ->get();
+
+        if ($predictions->isEmpty()) {
+            return null;
+        }
+
+        $teamPredictions = $predictions->map(function ($prediction) {
+            return new TeamPredictionData(
+                teamId: $prediction->team_id,
+                teamName: $prediction->team->name,
+                winProbability: (float) $prediction->win_probability,
+            );
+        });
+
+        return new PredictionResult(
+            week: $week,
+            type: PredictionTypeEnum::CHAMPIONSHIP,
+            predictions: $teamPredictions,
+            simulationsRun: 0,
+            earlyTerminated: false,
+        );
     }
 
     private function savePredictions(Season $season, PredictionResult $result): void

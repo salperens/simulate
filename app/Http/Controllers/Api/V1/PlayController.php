@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Actions\League\PlayAllWeeksAction;
+use App\Actions\League\PlayUnplayedWeeksAction;
 use App\Actions\League\PlayWeekAction;
 use App\Actions\Season\GetSeasonByIdOrCurrentAction;
 use App\Http\Controllers\Controller;
@@ -16,7 +16,7 @@ final class PlayController extends Controller
     public function __construct(
         private readonly GetSeasonByIdOrCurrentAction $getSeasonByIdOrCurrentAction,
         private readonly PlayWeekAction               $playWeekAction,
-        private readonly PlayAllWeeksAction           $playAllWeeksAction,
+        private readonly PlayUnplayedWeeksAction      $playUnplayedWeeksAction,
     )
     {
     }
@@ -42,7 +42,7 @@ final class PlayController extends Controller
     {
         $seasonId = $request->query('season_id');
         $season = $this->getSeasonByIdOrCurrentAction->execute($seasonId !== null ? (int)$seasonId : null);
-        $response = $this->playAllWeeksAction->execute($season);
+        $response = $this->playUnplayedWeeksAction->execute($season);
 
         return new PlayAllResource($response);
     }
