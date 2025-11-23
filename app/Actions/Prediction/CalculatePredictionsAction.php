@@ -87,6 +87,8 @@ readonly class CalculatePredictionsAction
     private function validatePredictionWindow(int $week, int $totalWeeks): void
     {
         // Predictions should be shown within the last 3 weeks
+        // Note: Original requirement was "after the 4th week", but we use "last 3 weeks"
+        // to accommodate variable team numbers (not fixed to 4 teams)
         $lastThreeWeeksStart = max(1, $totalWeeks - 2);
         if ($week < $lastThreeWeeksStart) {
             throw PredictionNotAvailableException::notInPredictionWindow($week, $totalWeeks);
