@@ -2,6 +2,8 @@
 
 A football league simulation application built with Laravel and Vue.js.
 
+🌐 **Live Demo**: [https://simulation.alperensarikaya.com/](https://simulation.alperensarikaya.com/)
+
 ## Features
 
 - **Season Management**: Create, start, and complete seasons with flexible team count (minimum 2 teams, supports 4-team leagues as specified in requirements)
@@ -48,8 +50,9 @@ This command will:
 
 ### 3. Access the application
 
-- **HTTPS**: https://lig-simulation.local/
-- **HTTP**: http://localhost:8000/
+- **Production**: [https://simulation.alperensarikaya.com/](https://simulation.alperensarikaya.com/)
+- **Local HTTPS**: https://lig-simulation.local/
+- **Local HTTP**: http://localhost:8000/
 
 ### 4. Start frontend development server (optional)
 
