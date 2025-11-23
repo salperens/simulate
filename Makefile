@@ -7,135 +7,135 @@ help: ## Show this help message
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "  %-15s %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
 build: ## Build Docker images
-	docker-compose build --no-cache
+	docker compose build --no-cache
 
 up: ## Start all containers
-	docker-compose up -d
+	docker compose up -d
 
 down: ## Stop all containers
-	docker-compose down
+	docker compose down
 
 restart: ## Restart all containers
-	docker-compose restart
+	docker compose restart
 
 logs: ## Show logs from all containers
-	docker-compose logs -f
+	docker compose logs -f
 
 logs-app: ## Show logs from app container
-	docker-compose logs -f app
+	docker compose logs -f app
 
 logs-nginx: ## Show logs from nginx container
-	docker-compose logs -f nginx
+	docker compose logs -f nginx
 
 logs-mysql: ## Show logs from mysql container
-	docker-compose logs -f mysql
+	docker compose logs -f mysql
 
 shell: ## Open shell in app container
-	docker-compose exec app sh
+	docker compose exec app sh
 
 bash: ## Open bash shell in app container
-	docker-compose exec app bash
+	docker compose exec app bash
 
 shell-root: ## Open shell as root in app container
-	docker-compose exec -u root app sh
+	docker compose exec -u root app sh
 
 bash-root: ## Open bash shell as root in app container
-	docker-compose exec -u root app bash
+	docker compose exec -u root app bash
 
 composer: ## Run composer command (usage: make composer CMD="install")
-	docker-compose exec app composer $(CMD)
+	docker compose exec app composer $(CMD)
 
 install: ## Install PHP dependencies
-	docker-compose exec app composer install
+	docker compose exec app composer install
 
 update: ## Update PHP dependencies
-	docker-compose exec app composer update
+	docker compose exec app composer update
 
 artisan: ## Run artisan command (usage: make artisan CMD="migrate")
-	docker-compose exec app php artisan $(CMD)
+	docker compose exec app php artisan $(CMD)
 
 migrate: ## Run database migrations
-	docker-compose exec app php artisan migrate
+	docker compose exec app php artisan migrate
 
 migrate-fresh: ## Fresh migration with seeding
-	docker-compose exec app php artisan migrate:fresh --seed
+	docker compose exec app php artisan migrate:fresh --seed
 
 seed: ## Run database seeders
-	docker-compose exec app php artisan db:seed
+	docker compose exec app php artisan db:seed
 
 key: ## Generate application key
-	docker-compose exec app php artisan key:generate
+	docker compose exec app php artisan key:generate
 
 cache-clear: ## Clear all caches
-	docker-compose exec app php artisan cache:clear
-	docker-compose exec app php artisan config:clear
-	docker-compose exec app php artisan route:clear
-	docker-compose exec app php artisan view:clear
+	docker compose exec app php artisan cache:clear
+	docker compose exec app php artisan config:clear
+	docker compose exec app php artisan route:clear
+	docker compose exec app php artisan view:clear
 
 cache-config: ## Cache configuration
-	docker-compose exec app php artisan config:cache
-	docker-compose exec app php artisan route:cache
-	docker-compose exec app php artisan view:cache
+	docker compose exec app php artisan config:cache
+	docker compose exec app php artisan route:cache
+	docker compose exec app php artisan view:cache
 
 test: ## Run tests (Pest/PHPUnit)
-	docker-compose exec app php artisan test
+	docker compose exec app php artisan test
 
 test-pest: ## Run Pest tests directly
-	docker-compose exec app ./vendor/bin/pest
+	docker compose exec app ./vendor/bin/pest
 
 test-unit: ## Run unit tests only
-	docker-compose exec app ./vendor/bin/pest tests/Unit
+	docker compose exec app ./vendor/bin/pest tests/Unit
 
 test-feature: ## Run feature tests only
-	docker-compose exec app ./vendor/bin/pest tests/Feature
+	docker compose exec app ./vendor/bin/pest tests/Feature
 
 test-filter: ## Run tests matching filter (usage: make test-filter FILTER="SimulateFixture")
-	docker-compose exec app ./vendor/bin/pest --filter=$(FILTER)
+	docker compose exec app ./vendor/bin/pest --filter=$(FILTER)
 
 test-coverage: ## Run tests with coverage report
-	docker-compose exec app ./vendor/bin/pest --coverage
+	docker compose exec app ./vendor/bin/pest --coverage
 
 test-watch: ## Run tests in watch mode
-	docker-compose exec app ./vendor/bin/pest --watch
+	docker compose exec app ./vendor/bin/pest --watch
 
 setup: ## Initial setup (install dependencies, generate key, migrate, npm-install) - requires containers to be running
 	@if [ ! -f .env ]; then \
 		echo "Creating .env file from .env.example..."; \
 		cp .env.example .env || echo " ️  .env.example not found. Please create .env manually."; \
 	fi
-	docker-compose exec app composer install
+	docker compose exec app composer install
 	@if command -v npm > /dev/null; then \
 		$(MAKE) npm-install; \
 	else \
 		echo "  npm not found. Skipping npm install. Install Node.js to enable frontend features."; \
 	fi
-	docker-compose exec app php artisan key:generate
-	docker-compose exec app php artisan storage:link || true
-	docker-compose exec app php artisan migrate
+	docker compose exec app php artisan key:generate
+	docker compose exec app php artisan storage:link || true
+	docker compose exec app php artisan migrate
 
 clean: ## Remove all containers, volumes and images
-	docker-compose down -v --rmi all
+	docker compose down -v --rmi all
 
 ps: ## Show running containers
-	docker-compose ps
+	docker compose ps
 
 stats: ## Show container resource usage
 	docker stats
 
 mysql: ## Connect to MySQL
-	docker-compose exec mysql mysql -u lig_user -ppassword lig_simulation
+	docker compose exec mysql mysql -u lig_user -ppassword lig_simulation
 
 mysql-root: ## Connect to MySQL as root
-	docker-compose exec mysql mysql -u root -proot
+	docker compose exec mysql mysql -u root -proot
 
 opcache-status: ## Check OPcache status
-	docker-compose exec app php -r "var_dump(opcache_get_status());"
+	docker compose exec app php -r "var_dump(opcache_get_status());"
 
 phpinfo: ## Show PHP configuration
-	docker-compose exec app php -i | grep -i opcache
+	docker compose exec app php -i | grep -i opcache
 
 storage-link: ## Create storage symbolic link
-	docker-compose exec app php artisan storage:link
+	docker compose exec app php artisan storage:link
 
 check-docker: ## Check if Docker is installed and running
 	@if ! command -v docker > /dev/null; then \
@@ -267,7 +267,7 @@ setup-full: ## Complete setup (hosts, SSL, build, up, install, key, migrate, npm
 	@echo "  - Generating application key..."
 	@$(MAKE) key
 	@echo "  - Creating storage link..."
-	@docker-compose exec app php artisan storage:link || true
+	@docker compose exec app php artisan storage:link || true
 	@echo "  - Running migrations..."
 	@$(MAKE) migrate
 	@echo ""
