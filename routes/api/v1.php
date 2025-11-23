@@ -15,4 +15,6 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/standings', [LeagueController::class, 'standings']);
+Route::get('/season/current', [LeagueController::class, 'currentSeason']);
+Route::get('/fixtures/week/{week}', [LeagueController::class, 'fixtures']);
 
