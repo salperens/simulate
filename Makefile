@@ -1,4 +1,4 @@
-.PHONY: help build up down restart logs shell bash shell-root bash-root composer install migrate seed test clean setup-ssl setup-full setup-hosts remove-hosts npm npm-install npm-dev npm-build check-npm
+.PHONY: help build up down restart logs shell bash shell-root bash-root composer install migrate seed test test-pest test-unit test-feature test-filter test-coverage test-watch clean setup-ssl setup-full setup-hosts remove-hosts npm npm-install npm-dev npm-build check-npm
 
 help: ## Show this help message
 	@echo 'Usage: make [target]'
@@ -77,8 +77,26 @@ cache-config: ## Cache configuration
 	docker-compose exec app php artisan route:cache
 	docker-compose exec app php artisan view:cache
 
-test: ## Run PHPUnit tests
+test: ## Run tests (Pest/PHPUnit)
 	docker-compose exec app php artisan test
+
+test-pest: ## Run Pest tests directly
+	docker-compose exec app ./vendor/bin/pest
+
+test-unit: ## Run unit tests only
+	docker-compose exec app ./vendor/bin/pest tests/Unit
+
+test-feature: ## Run feature tests only
+	docker-compose exec app ./vendor/bin/pest tests/Feature
+
+test-filter: ## Run tests matching filter (usage: make test-filter FILTER="SimulateFixture")
+	docker-compose exec app ./vendor/bin/pest --filter=$(FILTER)
+
+test-coverage: ## Run tests with coverage report
+	docker-compose exec app ./vendor/bin/pest --coverage
+
+test-watch: ## Run tests in watch mode
+	docker-compose exec app ./vendor/bin/pest --watch
 
 setup: ## Initial setup (install dependencies, generate key, migrate, npm-install) - requires containers to be running
 	docker-compose exec app composer install
