@@ -1,6 +1,7 @@
 <?php
 
 use App\Data\League\TeamStandingData;
+use App\Enums\Prediction\PredictionTypeEnum;
 use App\Enums\Season\SeasonStatusEnum;
 use App\Models\Fixture;
 use App\Models\Season;
@@ -28,7 +29,7 @@ test('it returns false when standings are empty', function () {
         currentWeek: 1,
         standings: collect(),
         remainingFixtures: collect(),
-        type: \App\Enums\Prediction\PredictionTypeEnum::CHAMPIONSHIP,
+        type: PredictionTypeEnum::CHAMPIONSHIP,
     );
 
     $checker = new EarlyTerminationChecker();
@@ -66,7 +67,7 @@ test('it returns true when only one team exists', function () {
         currentWeek: 1,
         standings: $standings,
         remainingFixtures: collect(),
-        type: \App\Enums\Prediction\PredictionTypeEnum::CHAMPIONSHIP,
+        type: PredictionTypeEnum::CHAMPIONSHIP,
     );
 
     $checker = new EarlyTerminationChecker();
@@ -115,8 +116,18 @@ test('it returns true when leader cannot be caught', function () {
 
     // Only 2 matches remaining (max 6 points possible)
     $remainingFixtures = collect([
-        Fixture::factory()->make(['week_number' => 6]),
-        Fixture::factory()->make(['week_number' => 6]),
+        Fixture::factory()->make([
+            'season_id'    => $season->id,
+            'week_number'  => 6,
+            'home_team_id' => $team1->id,
+            'away_team_id' => $team2->id,
+        ]),
+        Fixture::factory()->make([
+            'season_id'    => $season->id,
+            'week_number'  => 6,
+            'home_team_id' => $team2->id,
+            'away_team_id' => $team1->id,
+        ]),
     ]);
 
     $context = new PredictionContext(
@@ -124,7 +135,7 @@ test('it returns true when leader cannot be caught', function () {
         currentWeek: 5,
         standings: $standings,
         remainingFixtures: $remainingFixtures,
-        type: \App\Enums\Prediction\PredictionTypeEnum::CHAMPIONSHIP,
+        type: PredictionTypeEnum::CHAMPIONSHIP,
     );
 
     $checker = new EarlyTerminationChecker();
@@ -176,9 +187,24 @@ test('it returns false when leader can still be caught', function () {
 
     // 3 matches remaining (max 9 points possible)
     $remainingFixtures = collect([
-        Fixture::factory()->make(['week_number' => 6]),
-        Fixture::factory()->make(['week_number' => 6]),
-        Fixture::factory()->make(['week_number' => 6]),
+        Fixture::factory()->make([
+            'season_id'    => $season->id,
+            'week_number'  => 6,
+            'home_team_id' => $team1->id,
+            'away_team_id' => $team2->id,
+        ]),
+        Fixture::factory()->make([
+            'season_id'    => $season->id,
+            'week_number'  => 6,
+            'home_team_id' => $team2->id,
+            'away_team_id' => $team1->id,
+        ]),
+        Fixture::factory()->make([
+            'season_id'    => $season->id,
+            'week_number'  => 6,
+            'home_team_id' => $team1->id,
+            'away_team_id' => $team2->id,
+        ]),
     ]);
 
     $context = new PredictionContext(
@@ -186,7 +212,7 @@ test('it returns false when leader can still be caught', function () {
         currentWeek: 5,
         standings: $standings,
         remainingFixtures: $remainingFixtures,
-        type: \App\Enums\Prediction\PredictionTypeEnum::CHAMPIONSHIP,
+        type: PredictionTypeEnum::CHAMPIONSHIP,
     );
 
     $checker = new EarlyTerminationChecker();
@@ -252,7 +278,12 @@ test('it sorts standings correctly before checking termination', function () {
     ]);
 
     $remainingFixtures = collect([
-        Fixture::factory()->make(['week_number' => 6]),
+        Fixture::factory()->make([
+            'season_id'    => $season->id,
+            'week_number'  => 6,
+            'home_team_id' => $team1->id,
+            'away_team_id' => $team2->id,
+        ]),
     ]);
 
     $context = new PredictionContext(
@@ -260,7 +291,7 @@ test('it sorts standings correctly before checking termination', function () {
         currentWeek: 5,
         standings: $standings,
         remainingFixtures: $remainingFixtures,
-        type: \App\Enums\Prediction\PredictionTypeEnum::CHAMPIONSHIP,
+        type: PredictionTypeEnum::CHAMPIONSHIP,
     );
 
     $checker = new EarlyTerminationChecker();

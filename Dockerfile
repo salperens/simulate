@@ -54,7 +54,8 @@ RUN apk add --no-cache \
     gd \
     zip \
     opcache \
-    && docker-php-ext-enable opcache \
+    && pecl install pcov \
+    && docker-php-ext-enable opcache pcov \
     && apk del --no-cache \
     libpng-dev \
     libjpeg-turbo-dev \

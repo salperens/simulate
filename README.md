@@ -23,8 +23,8 @@ A football league simulation application built with Laravel and Vue.js.
 ### 1. Clone the repository
 
 ```bash
-git clone <repository-url>
-cd lig-simulation
+git clone https://github.com/salperens/simulate.git
+cd simulate
 ```
 
 ### 2. Run full setup (recommended)
@@ -104,7 +104,7 @@ make seed
 
 ```bash
 # Run all tests
-make test-pest
+make test
 
 # Run unit tests only
 make test-unit
@@ -224,7 +224,7 @@ The project uses Pest PHP for testing. Test coverage includes:
 Run tests with:
 
 ```bash
-make test-pest
+make test
 ```
 
 ## Environment Variables
