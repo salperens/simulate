@@ -2,6 +2,7 @@
 
 namespace App\Exceptions\Handlers;
 
+use App\Exceptions\Handlers\Concerns\HandlesApiRequests;
 use App\Exceptions\Handlers\Contracts\ExceptionHandler;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -10,6 +11,8 @@ use Throwable;
 
 class DefaultExceptionHandler implements ExceptionHandler
 {
+    use HandlesApiRequests;
+
     private const DEFAULT_EXCEPTION_MESSAGE = 'An error occurred';
     private const DEFAULT_CODE = Response::HTTP_INTERNAL_SERVER_ERROR;
 
@@ -29,7 +32,7 @@ class DefaultExceptionHandler implements ExceptionHandler
 
     public function shouldHandle(Throwable $exception, Request $request): bool
     {
-        return $request->is('api/*');
+        return $this->isApiRequest($request);
     }
 
     private function getStatusCode(Throwable $exception): int
