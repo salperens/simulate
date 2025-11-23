@@ -24,7 +24,7 @@
     </div>
     <div class="mt-3 flex items-center justify-between">
       <div v-if="match.played_at" class="text-sm text-gray-500">
-        Played: {{ formatDate(match.played_at) }}
+      Played: {{ formatDate(match.played_at) }}
       </div>
       <button
         v-if="canEdit"

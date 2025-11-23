@@ -3,8 +3,8 @@
     <div v-if="show" class="fixed inset-0 z-50 flex items-center justify-center bg-white/70 backdrop-blur-md">
       <div class="text-center">
         <img
-          :src="penaltyGif"
-          alt="Playing matches..."
+          :src="gifSrc"
+          :alt="message"
           class="mx-auto w-32 h-32"
         />
         <p class="mt-4 text-gray-900 text-lg font-semibold">{{ message }}</p>
@@ -14,9 +14,11 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
 import penaltyGif from '../../images/penalty.gif'
+import loadingGif from '../../images/loading.gif'
 
-defineProps({
+const props = defineProps({
   show: {
     type: Boolean,
     required: true,
@@ -25,6 +27,15 @@ defineProps({
     type: String,
     default: 'Playing matches...',
   },
+  gifType: {
+    type: String,
+    default: 'penalty', // 'penalty' or 'loading'
+    validator: (value) => ['penalty', 'loading'].includes(value),
+  },
+})
+
+const gifSrc = computed(() => {
+  return props.gifType === 'loading' ? loadingGif : penaltyGif
 })
 </script>
 

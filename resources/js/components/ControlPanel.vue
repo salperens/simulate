@@ -26,13 +26,13 @@
           @change="handleWeekChange"
         >
           <option v-for="w in totalWeeks" :key="w" :value="w">
-            Week {{ w }}
+            Week {{ w }}{{ seasonStatus === 'active' && w === nextPlayableWeek ? ' (Next)' : '' }}
           </option>
         </select>
         <button
           v-if="seasonStatus === 'active'"
           @click="playWeek"
-          :disabled="loading || isCurrentWeekPlayed"
+          :disabled="loading || !canPlaySelectedWeek"
           class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Play This Week
@@ -154,6 +154,18 @@ const isSeasonCompleted = computed(() => {
 const isCurrentWeekPlayed = computed(() => {
   if (props.matches.length === 0) return false
   return props.matches.every(match => match.played_at !== null)
+})
+
+const nextPlayableWeek = computed(() => {
+  if (isCurrentWeekPlayed.value && props.matches.length > 0) {
+    return props.currentWeek + 1
+  }
+
+  return props.currentWeek
+})
+
+const canPlaySelectedWeek = computed(() => {
+  return selectedWeek.value === nextPlayableWeek.value && props.seasonStatus === 'active'
 })
 
 const canGoToNextWeek = computed(() => {

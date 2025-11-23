@@ -7,6 +7,7 @@ use App\Actions\Prediction\CalculatePredictionsIfApplicableAction;
 use App\Data\League\PlayWeekResponseData;
 use App\Enums\Season\SeasonStatusEnum;
 use App\Exceptions\Season\CannotPlayMatchesException;
+use App\Models\Fixture;
 use App\Models\Season;
 
 readonly class PlayWeekAction
@@ -24,6 +25,8 @@ readonly class PlayWeekAction
             throw CannotPlayMatchesException::seasonCompleted();
         }
 
+        $this->validateWeekOrder($season, $weekNumber);
+
         $matchesPlayed = $this->simulateWeekAction->execute($weekNumber, $season->id);
 
         $this->calculatePredictionsIfApplicableAction->execute($season, $weekNumber);
@@ -32,5 +35,28 @@ readonly class PlayWeekAction
             week: $weekNumber,
             matchesPlayed: $matchesPlayed,
         );
+    }
+
+    private function validateWeekOrder(Season $season, int $requestedWeek): void
+    {
+        $lastPlayedWeek = $season->fixtures()
+            ->whereNotNull('played_at')
+            ->max('week_number');
+
+        $nextPlayableWeek = $lastPlayedWeek === null ? 1 : $lastPlayedWeek + 1;
+
+        if ($requestedWeek !== $nextPlayableWeek) {
+            throw CannotPlayMatchesException::weekOutOfOrder($requestedWeek, $nextPlayableWeek);
+        }
+
+        $hasUnplayedWeeksBefore = Fixture::query()
+            ->where('season_id', $season->id)
+            ->where('week_number', '<', $requestedWeek)
+            ->whereNull('played_at')
+            ->exists();
+
+        if ($hasUnplayedWeeksBefore) {
+            throw CannotPlayMatchesException::weekOutOfOrder($requestedWeek, $nextPlayableWeek);
+        }
     }
 }

@@ -1,8 +1,9 @@
 <template>
   <div class="min-h-screen bg-gray-50">
     <LoadingOverlay
-      :show="isPlayingMatches"
-      message="Playing matches..."
+      :show="isPlayingMatches || isLoadingSeasonData"
+      :message="isLoadingSeasonData ? 'Loading season data...' : 'Playing matches...'"
+      :gifType="loadingGifType"
     />
     <Header />
     <main class="container mx-auto px-4 py-8">
@@ -115,6 +116,7 @@ const {
 } = useLeague()
 
 const activeTab = ref('seasons')
+const isLoadingSeason = ref(false)
 
 const tabs = [
   { id: 'seasons', label: 'Seasons', icon: CalendarIcon },
@@ -132,11 +134,20 @@ const isPlayingMatches = computed(() => {
   return loading.value
 })
 
-const handleTabChange = (tabId) => {
+const isLoadingSeasonData = computed(() => {
+  return isLoadingSeason.value
+})
+
+const loadingGifType = computed(() => {
+  return isLoadingSeason.value ? 'loading' : 'penalty'
+})
+
+const handleTabChange = async (tabId) => {
   activeTab.value = tabId
 
   if (tabId === 'season-detail' && selectedSeason.value) {
-    loadSeasonData()
+    // loadSeasonData already uses skipLoading = true
+    await loadSeasonData()
   }
 
   if (tabId === 'create-season' && teams.value.length === 0) {
@@ -145,9 +156,14 @@ const handleTabChange = (tabId) => {
 }
 
 const handleSelectSeason = async (seasonId) => {
+  isLoadingSeason.value = true
+  try {
   await selectSeason(seasonId)
   activeTab.value = 'season-detail'
   await loadSeasonData()
+  } finally {
+    isLoadingSeason.value = false
+  }
 }
 
 const handleCreateSeasonClick = () => {
@@ -180,13 +196,14 @@ const handleCancelCreate = () => {
 }
 
 const loadSeasonData = async () => {
+  // Skip loading state for data fetching (not playing matches)
   await Promise.all([
-    fetchStandings(currentWeek.value),
-    fetchWeekMatches(currentWeek.value),
+    fetchStandings(currentWeek.value, true), // skipLoading = true
+    fetchWeekMatches(currentWeek.value, true), // skipLoading = true
   ])
 
   if (shouldShowPredictions.value) {
-    await fetchPredictions(currentWeek.value)
+    await fetchPredictions(currentWeek.value, true) // skipLoading = true
   }
 }
 
@@ -198,12 +215,12 @@ const handlePlayWeek = async (week) => {
   try {
     await playWeekAction(week)
     await Promise.all([
-      fetchStandings(week),
-      fetchWeekMatches(week),
+      fetchStandings(week, true), // skipLoading = true
+      fetchWeekMatches(week, true), // skipLoading = true
     ])
 
     if (shouldShowPredictions.value) {
-      await fetchPredictions(week)
+      await fetchPredictions(week, true) // skipLoading = true
     }
 
     const elapsedTime = Date.now() - startTime
@@ -223,12 +240,12 @@ const handlePlayAll = async () => {
   try {
     await playAllAction()
     await Promise.all([
-      fetchStandings(currentWeek.value),
-      fetchWeekMatches(currentWeek.value),
+      fetchStandings(currentWeek.value, true), // skipLoading = true
+      fetchWeekMatches(currentWeek.value, true), // skipLoading = true
     ])
 
     if (shouldShowPredictions.value) {
-      await fetchPredictions(currentWeek.value)
+      await fetchPredictions(currentWeek.value, true) // skipLoading = true
     }
 
     const elapsedTime = Date.now() - startTime
@@ -241,17 +258,19 @@ const handlePlayAll = async () => {
 }
 
 const handleWeekChange = async (week) => {
+  // Skip loading state for data fetching (not playing matches)
   await Promise.all([
-    fetchWeekMatches(week),
-    fetchStandings(week),
+    fetchWeekMatches(week, true), // skipLoading = true
+    fetchStandings(week, true), // skipLoading = true
   ])
   if (shouldShowPredictions.value) {
-    await fetchPredictions(week)
+    await fetchPredictions(week, true) // skipLoading = true
   }
 }
 
 const handleNextWeek = async (week) => {
   currentWeek.value = week
+  // loadSeasonData already uses skipLoading = true
   await loadSeasonData()
 }
 
@@ -288,19 +307,16 @@ const handleCompleteSeason = async () => {
 const handleUpdateFixture = async (data, resolve, reject) => {
   try {
     await updateFixtureAction(data.fixtureId, data.homeScore, data.awayScore)
-    
-    // Verileri yenile
+
     await Promise.all([
-      fetchStandings(currentWeek.value),
-      fetchWeekMatches(currentWeek.value),
+      fetchStandings(currentWeek.value, true), // skipLoading = true
+      fetchWeekMatches(currentWeek.value, true), // skipLoading = true
     ])
 
-    // Tahminleri de yenile (eğer gösteriliyorsa)
     if (shouldShowPredictions.value) {
-      await fetchPredictions(currentWeek.value)
+      await fetchPredictions(currentWeek.value, true) // skipLoading = true
     }
-    
-    // Başarılı güncelleme için resolve çağır
+
     if (resolve) resolve()
   } catch (error) {
     const errorMessage = error.response?.data?.message ||
@@ -315,16 +331,5 @@ const handleUpdateFixture = async (data, resolve, reject) => {
 
 onMounted(async () => {
   await fetchSeasons()
-  if (seasons.value.length > 0) {
-    const activeSeason = seasons.value.find(s => s.status === 'active')
-    if (activeSeason) {
-      await handleSelectSeason(activeSeason.id)
-    } else {
-      const latestSeason = seasons.value[0]
-      if (latestSeason) {
-        await handleSelectSeason(latestSeason.id)
-      }
-    }
-  }
 })
 </script>

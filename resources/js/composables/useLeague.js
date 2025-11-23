@@ -15,8 +15,10 @@ export function useLeague() {
   const loadingTeams = ref(false)
   const loadingPredictions = ref(false)
 
-  const fetchStandings = async (week = null) => {
+  const fetchStandings = async (week = null, skipLoading = false) => {
+    if (!skipLoading) {
     loading.value = true
+    }
     try {
       const params = new URLSearchParams()
       
@@ -36,7 +38,9 @@ export function useLeague() {
     } catch (error) {
       console.error('Standings fetch error:', error)
     } finally {
+      if (!skipLoading) {
       loading.value = false
+      }
     }
   }
 
@@ -76,26 +80,16 @@ export function useLeague() {
       selectedSeason.value = seasonData
       currentWeek.value = seasonData.current_week || 1
       totalWeeks.value = seasonData.total_weeks || 6
-      
-      await Promise.all([
-        fetchStandings(currentWeek.value),
-        fetchWeekMatches(currentWeek.value),
-      ])
-      
-      const lastThreeWeeksStart = Math.max(1, totalWeeks.value - 2)
-      if (currentWeek.value >= lastThreeWeeksStart) {
-        await fetchPredictions(currentWeek.value)
-      } else {
-        predictions.value = []
-      }
     } catch (error) {
       console.error('Select season error:', error)
       throw error
     }
   }
 
-  const fetchWeekMatches = async (week) => {
+  const fetchWeekMatches = async (week, skipLoading = false) => {
+    if (!skipLoading) {
     loading.value = true
+    }
     try {
       const url = selectedSeason.value?.id
         ? `/api/v1/fixtures/week/${week}?season_id=${selectedSeason.value.id}`
@@ -105,11 +99,13 @@ export function useLeague() {
     } catch (error) {
       console.error('Matches fetch error:', error)
     } finally {
+      if (!skipLoading) {
       loading.value = false
+      }
     }
   }
 
-  const fetchPredictions = async (week) => {
+  const fetchPredictions = async (week, skipLoading = false) => {
     loadingPredictions.value = true
     try {
       const url = selectedSeason.value?.id
@@ -135,7 +131,6 @@ export function useLeague() {
   }
 
   const playWeek = async (week) => {
-    loading.value = true
     try {
       const url = selectedSeason.value?.id
         ? `/api/v1/league/week/${week}/play?season_id=${selectedSeason.value.id}`
@@ -157,7 +152,6 @@ export function useLeague() {
   }
 
   const playAll = async () => {
-    loading.value = true
     try {
       const url = selectedSeason.value?.id
         ? `/api/v1/league/play-all?season_id=${selectedSeason.value.id}`
