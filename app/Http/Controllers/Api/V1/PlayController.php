@@ -25,7 +25,7 @@ final class PlayController extends Controller
      * Play a specific week.
      * If season_id is provided, use that season. Otherwise, use current season.
      */
-    public function week(Request $request, PlayWeekRequest $playWeekRequest, int $week): PlayWeekResource
+    public function week(PlayWeekRequest $request, int $week): PlayWeekResource
     {
         $seasonId = $request->query('season_id');
         $season = $this->getSeasonByIdOrCurrentAction->execute($seasonId !== null ? (int)$seasonId : null);

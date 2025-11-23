@@ -19,4 +19,3 @@ readonly class FakeRandomGenerator implements RandomGenerator
         return $this->fixedValue;
     }
 }
-

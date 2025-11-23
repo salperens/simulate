@@ -13,7 +13,7 @@ final class StandingsController extends Controller
 {
     public function __construct(
         private readonly GetSeasonByIdOrCurrentAction $getSeasonByIdOrCurrentAction,
-        private readonly CalculateStandingsAction    $calculateStandingsAction,
+        private readonly CalculateStandingsAction     $calculateStandingsAction,
     )
     {
     }
@@ -25,6 +25,7 @@ final class StandingsController extends Controller
     public function index(Request $request): AnonymousResourceCollection
     {
         $seasonId = $request->query('season_id');
+        
         $season = $this->getSeasonByIdOrCurrentAction->execute($seasonId !== null ? (int)$seasonId : null);
         $standings = $this->calculateStandingsAction->execute($season);
 

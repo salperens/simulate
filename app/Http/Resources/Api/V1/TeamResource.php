@@ -19,13 +19,12 @@ class TeamResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id'                      => $this->resource->id,
-            'name'                    => $this->resource->name,
-            'power_rating'           => $this->resource->power_rating,
-            'goalkeeper_factor'      => $this->resource->goalkeeper_factor,
-            'supporter_strength'     => $this->resource->supporter_strength,
+            'id'                        => $this->resource->id,
+            'name'                      => $this->resource->name,
+            'power_rating'              => $this->resource->power_rating,
+            'goalkeeper_factor'         => $this->resource->goalkeeper_factor,
+            'supporter_strength'        => $this->resource->supporter_strength,
             'home_advantage_multiplier' => $this->resource->home_advantage_multiplier,
         ];
     }
 }
-

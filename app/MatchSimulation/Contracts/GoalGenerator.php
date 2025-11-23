@@ -17,4 +17,3 @@ interface GoalGenerator
      */
     public function generateScore(MatchContext $context, MatchOutcomeEnum $outcome): MatchSimulationResult;
 }
-

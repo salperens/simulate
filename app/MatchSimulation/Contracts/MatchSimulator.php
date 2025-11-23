@@ -9,4 +9,3 @@ interface MatchSimulator
 {
     public function simulate(MatchContext $context): MatchSimulationResult;
 }
-

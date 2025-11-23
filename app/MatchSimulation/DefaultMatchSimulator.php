@@ -41,4 +41,3 @@ readonly class DefaultMatchSimulator implements MatchSimulator
         return MatchOutcomeEnum::DRAW;
     }
 }
-

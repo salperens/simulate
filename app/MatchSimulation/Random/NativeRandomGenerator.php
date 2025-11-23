@@ -11,4 +11,3 @@ class NativeRandomGenerator implements RandomGenerator
         return mt_rand() / mt_getrandmax();
     }
 }
-

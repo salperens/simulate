@@ -11,4 +11,3 @@ interface RandomGenerator
      */
     public function float01(): float;
 }
-

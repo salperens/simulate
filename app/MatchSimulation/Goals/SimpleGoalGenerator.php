@@ -53,4 +53,3 @@ readonly class SimpleGoalGenerator implements GoalGenerator
         return (int)floor($min + $random * ($max - $min + 1));
     }
 }
-

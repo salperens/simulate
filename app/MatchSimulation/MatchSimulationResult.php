@@ -35,4 +35,3 @@ readonly class MatchSimulationResult
         return $this->homeWins() ? $homeTeamId : $awayTeamId;
     }
 }
-

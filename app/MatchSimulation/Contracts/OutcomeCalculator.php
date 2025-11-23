@@ -14,4 +14,3 @@ interface OutcomeCalculator
      */
     public function calculateProbabilities(MatchContext $context): array;
 }
-

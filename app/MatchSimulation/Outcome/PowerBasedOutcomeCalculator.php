@@ -38,4 +38,3 @@ class PowerBasedOutcomeCalculator implements OutcomeCalculator
         ];
     }
 }
-
