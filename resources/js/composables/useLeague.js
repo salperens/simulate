@@ -241,6 +241,22 @@ export function useLeague() {
     }
   }
 
+  const updateFixture = async (fixtureId, homeScore, awayScore) => {
+    loading.value = true
+    try {
+      const response = await axios.put(`/api/v1/fixtures/${fixtureId}`, {
+        home_score: homeScore,
+        away_score: awayScore,
+      })
+      return response.data.data
+    } catch (error) {
+      console.error('Update fixture error:', error)
+      throw error
+    } finally {
+      loading.value = false
+    }
+  }
+
   const hasActiveSeason = computed(() => {
     return seasons.value.some(s => s.status === 'active')
   })
@@ -271,6 +287,7 @@ export function useLeague() {
     createSeason,
     startSeason,
     completeSeason,
+    updateFixture,
   }
 }
 

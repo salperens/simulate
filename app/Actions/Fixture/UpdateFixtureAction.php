@@ -3,21 +3,26 @@
 namespace App\Actions\Fixture;
 
 use App\Actions\League\CalculateStandingsAction;
+use App\Actions\Prediction\CalculatePredictionsIfApplicableAction;
 use App\Data\Fixture\FixtureData;
 use App\Data\Fixture\TeamData;
 use App\Exceptions\Fixture\FixtureNotFoundException;
+use App\Models\ChampionshipPrediction;
 use App\Models\Fixture;
 use App\Models\Season;
 use Illuminate\Support\Carbon;
 
 readonly class UpdateFixtureAction
 {
-    public function __construct(private CalculateStandingsAction $calculateStandingsAction)
+    public function __construct(
+        private CalculateStandingsAction               $calculateStandingsAction,
+        private CalculatePredictionsIfApplicableAction $calculatePredictionsIfApplicableAction,
+    )
     {
     }
 
     /**
-     * Update fixture result and recalculate standings.
+     * Update fixture result and recalculate standings and predictions.
      *
      * @param int $fixtureId
      * @param int $homeScore
@@ -40,6 +45,7 @@ readonly class UpdateFixtureAction
         ]);
 
         $this->recalculateStandings($fixture->season);
+        $this->recalculatePredictions($fixture->season, $fixture->week_number);
 
         $fixture->refresh();
 
@@ -68,5 +74,21 @@ readonly class UpdateFixtureAction
     private function recalculateStandings(Season $season): void
     {
         $this->calculateStandingsAction->execute($season);
+    }
+
+    private function recalculatePredictions(Season $season, int $weekNumber): void
+    {
+        $totalWeeks = $season->getTotalWeeks();
+        $lastThreeWeeksStart = max(1, $totalWeeks - 2);
+
+        ChampionshipPrediction::query()
+            ->where('season_id', $season->id)
+            ->where('week_number', '>=', $weekNumber)
+            ->where('week_number', '>=', $lastThreeWeeksStart)
+            ->delete();
+
+        for ($week = $weekNumber; $week <= $totalWeeks; $week++) {
+            $this->calculatePredictionsIfApplicableAction->execute($season, $week);
+        }
     }
 }

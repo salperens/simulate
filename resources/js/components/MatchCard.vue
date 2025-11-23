@@ -22,14 +22,23 @@
         </div>
       </div>
     </div>
-    <div v-if="match.played_at" class="mt-2 text-sm text-gray-500">
-      Played: {{ formatDate(match.played_at) }}
+    <div class="mt-3 flex items-center justify-between">
+      <div v-if="match.played_at" class="text-sm text-gray-500">
+        Played: {{ formatDate(match.played_at) }}
+      </div>
+      <button
+        @click="$emit('edit', match)"
+        class="ml-auto px-3 py-1.5 text-sm bg-green-600 text-white rounded-lg hover:bg-green-700 transition flex items-center gap-1"
+      >
+        <PencilIcon class="w-4 h-4" />
+        Edit
+      </button>
     </div>
   </div>
 </template>
 
 <script setup>
-import { HomeIcon, TruckIcon } from '@heroicons/vue/24/outline'
+import { HomeIcon, TruckIcon, PencilIcon } from '@heroicons/vue/24/outline'
 
 defineProps({
   match: {
@@ -37,6 +46,8 @@ defineProps({
     required: true,
   },
 })
+
+defineEmits(['edit'])
 
 const formatDate = (dateString) => {
   if (!dateString) return ''

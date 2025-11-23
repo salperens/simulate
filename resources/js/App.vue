@@ -34,7 +34,11 @@
 
       <div v-if="activeTab === 'season-detail' && selectedSeason" class="mt-6">
         <LeagueTable :standings="standings" />
-        <WeekMatches :week="currentWeek" :matches="matches" />
+        <WeekMatches
+          :week="currentWeek"
+          :matches="matches"
+          @update="handleUpdateFixture"
+        />
         <ChampionshipPredictions
           v-if="shouldShowPredictions"
           :predictions="predictions"
@@ -106,6 +110,7 @@ const {
   createSeason: createSeasonAction,
   startSeason: startSeasonAction,
   completeSeason: completeSeasonAction,
+  updateFixture: updateFixtureAction,
 } = useLeague()
 
 const activeTab = ref('seasons')
@@ -276,6 +281,34 @@ const handleCompleteSeason = async () => {
   } catch (error) {
     const errorMessage = error.response?.data?.message || 'An error occurred while completing the season.'
     alert(errorMessage)
+  }
+}
+
+const handleUpdateFixture = async (data, resolve, reject) => {
+  try {
+    await updateFixtureAction(data.fixtureId, data.homeScore, data.awayScore)
+    
+    // Verileri yenile
+    await Promise.all([
+      fetchStandings(currentWeek.value),
+      fetchWeekMatches(currentWeek.value),
+    ])
+
+    // Tahminleri de yenile (eğer gösteriliyorsa)
+    if (shouldShowPredictions.value) {
+      await fetchPredictions(currentWeek.value)
+    }
+    
+    // Başarılı güncelleme için resolve çağır
+    if (resolve) resolve()
+  } catch (error) {
+    const errorMessage = error.response?.data?.message ||
+                        (error.response?.data?.errors ?
+                          Object.values(error.response.data.errors).flat().join(', ') :
+                          'Maç skoru güncellenirken bir hata oluştu.')
+    alert(errorMessage)
+    if (reject) reject(error)
+    throw error
   }
 }
 
