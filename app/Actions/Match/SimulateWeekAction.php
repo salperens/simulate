@@ -10,7 +10,7 @@ readonly class SimulateWeekAction
     {
     }
 
-    public function execute(int $weekNumber, int $seasonId): void
+    public function execute(int $weekNumber, int $seasonId): int
     {
         $fixtures = Fixture::query()->where('season_id', $seasonId)
             ->where('week_number', $weekNumber)
@@ -21,6 +21,8 @@ readonly class SimulateWeekAction
         foreach ($fixtures as $fixture) {
             $this->simulateFixtureAction->execute($fixture);
         }
+
+        return $fixtures->count();
     }
 }
 

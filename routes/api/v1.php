@@ -1,6 +1,9 @@
 <?php
 
-use App\Http\Controllers\Api\V1\LeagueController;
+use App\Http\Controllers\Api\V1\FixtureController;
+use App\Http\Controllers\Api\V1\PlayController;
+use App\Http\Controllers\Api\V1\SeasonController;
+use App\Http\Controllers\Api\V1\StandingsController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,7 +17,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/standings', [LeagueController::class, 'standings']);
-Route::get('/season/current', [LeagueController::class, 'currentSeason']);
-Route::get('/fixtures/week/{week}', [LeagueController::class, 'fixtures']);
-
+Route::get('/standings', [StandingsController::class, 'index']);
+Route::get('/season/current', [SeasonController::class, 'current']);
+Route::get('/fixtures/week/{week}', [FixtureController::class, 'byWeek']);
+Route::post('/league/week/{week}/play', [PlayController::class, 'week']);
+Route::post('/league/play-all', [PlayController::class, 'all']);
