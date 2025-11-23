@@ -16,13 +16,12 @@ class SeasonData extends Data
         public ?string            $name,
         public SeasonStatusEnum   $status,
         #[WithCast(DateTimeInterfaceCast::class)]
-        public ?DateTimeInterface $start_date,
+        public ?DateTimeInterface $startDate,
         #[WithCast(DateTimeInterfaceCast::class)]
-        public ?DateTimeInterface $end_date,
-        public int                $current_week,
-        public int                $total_weeks,
+        public ?DateTimeInterface $endDate,
+        public int                $currentWeek,
+        public int                $totalWeeks,
     )
     {
     }
 }
-

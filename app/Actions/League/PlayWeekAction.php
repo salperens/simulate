@@ -19,7 +19,7 @@ readonly class PlayWeekAction
 
         return new PlayWeekResponseData(
             week: $weekNumber,
-            matches_played: $matchesPlayed,
+            matchesPlayed: $matchesPlayed,
         );
     }
 }

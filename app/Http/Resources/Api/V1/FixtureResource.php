@@ -20,18 +20,18 @@ class FixtureResource extends JsonResource
     {
         return [
             'id'          => $this->resource->id,
-            'week_number' => $this->resource->week_number,
+            'week_number' => $this->resource->weekNumber,
             'home_team'   => [
-                'id'   => $this->resource->home_team->id,
-                'name' => $this->resource->home_team->name,
+                'id'   => $this->resource->homeTeam->id,
+                'name' => $this->resource->homeTeam->name,
             ],
             'away_team'   => [
-                'id'   => $this->resource->away_team->id,
-                'name' => $this->resource->away_team->name,
+                'id'   => $this->resource->awayTeam->id,
+                'name' => $this->resource->awayTeam->name,
             ],
-            'home_score'  => $this->resource->home_score,
-            'away_score'  => $this->resource->away_score,
-            'played_at'   => $this->resource->played_at?->format('c'),
+            'home_score'  => $this->resource->homeScore,
+            'away_score'  => $this->resource->awayScore,
+            'played_at'   => $this->resource->playedAt?->format('c'),
         ];
     }
 }

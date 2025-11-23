@@ -13,12 +13,11 @@ class TeamStandingData extends Data
         public readonly int    $won,
         public readonly int    $drawn,
         public readonly int    $lost,
-        public readonly int    $goals_for,
-        public readonly int    $goals_against,
-        public readonly int    $goal_difference,
+        public readonly int    $goalsFor,
+        public readonly int    $goalsAgainst,
+        public readonly int    $goalDifference,
         public readonly int    $points,
     )
     {
     }
 }
-

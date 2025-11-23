@@ -11,15 +11,15 @@ class TeamStatsData extends Data
         public int $won = 0,
         public int $drawn = 0,
         public int $lost = 0,
-        public int $goals_for = 0,
-        public int $goals_against = 0,
+        public int $goalsFor = 0,
+        public int $goalsAgainst = 0,
     )
     {
     }
 
     public function getGoalDifference(): int
     {
-        return $this->goals_for - $this->goals_against;
+        return $this->goalsFor - $this->goalsAgainst;
     }
 
     public function getPoints(): int
@@ -34,8 +34,8 @@ class TeamStatsData extends Data
             won: $this->won,
             drawn: $this->drawn,
             lost: $this->lost,
-            goals_for: $this->goals_for,
-            goals_against: $this->goals_against,
+            goalsFor: $this->goalsFor,
+            goalsAgainst: $this->goalsAgainst,
         );
     }
 
@@ -46,8 +46,8 @@ class TeamStatsData extends Data
             won: $this->won,
             drawn: $this->drawn,
             lost: $this->lost,
-            goals_for: $this->goals_for + $for,
-            goals_against: $this->goals_against + $against,
+            goalsFor: $this->goalsFor + $for,
+            goalsAgainst: $this->goalsAgainst + $against,
         );
     }
 
@@ -58,8 +58,8 @@ class TeamStatsData extends Data
             won: $this->won + 1,
             drawn: $this->drawn,
             lost: $this->lost,
-            goals_for: $this->goals_for,
-            goals_against: $this->goals_against,
+            goalsFor: $this->goalsFor,
+            goalsAgainst: $this->goalsAgainst,
         );
     }
 
@@ -70,8 +70,8 @@ class TeamStatsData extends Data
             won: $this->won,
             drawn: $this->drawn + 1,
             lost: $this->lost,
-            goals_for: $this->goals_for,
-            goals_against: $this->goals_against,
+            goalsFor: $this->goalsFor,
+            goalsAgainst: $this->goalsAgainst,
         );
     }
 
@@ -82,9 +82,8 @@ class TeamStatsData extends Data
             won: $this->won,
             drawn: $this->drawn,
             lost: $this->lost + 1,
-            goals_for: $this->goals_for,
-            goals_against: $this->goals_against,
+            goalsFor: $this->goalsFor,
+            goalsAgainst: $this->goalsAgainst,
         );
     }
 }
-

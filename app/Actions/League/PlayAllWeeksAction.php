@@ -17,7 +17,7 @@ readonly class PlayAllWeeksAction
         $matchesPlayed = $this->simulateAllWeeksAction->execute($season->id);
 
         return new PlayAllResponseData(
-            matches_played: $matchesPlayed,
+            matchesPlayed: $matchesPlayed,
         );
     }
 }

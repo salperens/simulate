@@ -7,7 +7,7 @@ use Spatie\LaravelData\Data;
 class PlayAllResponseData extends Data
 {
     public function __construct(
-        public readonly int $matches_played,
+        public readonly int $matchesPlayed,
     ) {
     }
 }

@@ -24,18 +24,18 @@ readonly class GetFixturesByWeekAction
     {
         return new FixtureData(
             id: $fixture->id,
-            week_number: $fixture->week_number,
-            home_team: new TeamData(
+            weekNumber: $fixture->week_number,
+            homeTeam: new TeamData(
                 id: $fixture->homeTeam->id,
                 name: $fixture->homeTeam->name,
             ),
-            away_team: new TeamData(
+            awayTeam: new TeamData(
                 id: $fixture->awayTeam->id,
                 name: $fixture->awayTeam->name,
             ),
-            home_score: $fixture->home_score,
-            away_score: $fixture->away_score,
-            played_at: $fixture->played_at,
+            homeScore: $fixture->home_score,
+            awayScore: $fixture->away_score,
+            playedAt: $fixture->played_at,
         );
     }
 }

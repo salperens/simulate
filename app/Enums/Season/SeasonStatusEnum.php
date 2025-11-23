@@ -4,7 +4,7 @@ namespace App\Enums\Season;
 
 /**
  * SeasonStatusEnum
- * 
+ *
  * Represents the possible statuses of a season.
  */
 enum SeasonStatusEnum: string
@@ -37,4 +37,3 @@ enum SeasonStatusEnum: string
         };
     }
 }
-

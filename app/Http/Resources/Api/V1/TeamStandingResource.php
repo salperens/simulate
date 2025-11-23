@@ -25,9 +25,9 @@ class TeamStandingResource extends JsonResource
             'won'             => $this->resource->won,
             'drawn'           => $this->resource->drawn,
             'lost'            => $this->resource->lost,
-            'goals_for'       => $this->resource->goals_for,
-            'goals_against'   => $this->resource->goals_against,
-            'goal_difference' => $this->resource->goal_difference,
+            'goals_for'       => $this->resource->goalsFor,
+            'goals_against'   => $this->resource->goalsAgainst,
+            'goal_difference' => $this->resource->goalDifference,
             'points'          => $this->resource->points,
         ];
     }

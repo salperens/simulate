@@ -8,7 +8,7 @@ class PlayWeekResponseData extends Data
 {
     public function __construct(
         public readonly int $week,
-        public readonly int $matches_played,
+        public readonly int $matchesPlayed,
     ) {
     }
 }

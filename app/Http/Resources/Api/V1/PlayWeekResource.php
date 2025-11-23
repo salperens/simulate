@@ -22,7 +22,7 @@ class PlayWeekResource extends JsonResource
             'message'        => "Week {$this->resource->week} played successfully",
             'data'           => [
                 'week'            => $this->resource->week,
-                'matches_played'  => $this->resource->matches_played,
+                'matches_played'  => $this->resource->matchesPlayed,
             ],
         ];
     }

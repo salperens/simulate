@@ -23,10 +23,10 @@ class SeasonResource extends JsonResource
             'year'         => $this->resource->year,
             'name'         => $this->resource->name,
             'status'       => $this->resource->status->value,
-            'start_date'   => $this->resource->start_date?->format('Y-m-d'),
-            'end_date'     => $this->resource->end_date?->format('Y-m-d'),
-            'current_week' => $this->resource->current_week,
-            'total_weeks'  => $this->resource->total_weeks,
+            'start_date'   => $this->resource->startDate?->format('Y-m-d'),
+            'end_date'     => $this->resource->endDate?->format('Y-m-d'),
+            'current_week' => $this->resource->currentWeek,
+            'total_weeks'  => $this->resource->totalWeeks,
         ];
     }
 }

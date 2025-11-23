@@ -111,9 +111,9 @@ readonly class CalculateStandingsAction
             won: $stats->won,
             drawn: $stats->drawn,
             lost: $stats->lost,
-            goals_for: $stats->goals_for,
-            goals_against: $stats->goals_against,
-            goal_difference: $stats->getGoalDifference(),
+            goalsFor: $stats->goalsFor,
+            goalsAgainst: $stats->goalsAgainst,
+            goalDifference: $stats->getGoalDifference(),
             points: $stats->getPoints(),
         );
     }
@@ -129,11 +129,11 @@ readonly class CalculateStandingsAction
                 return $b->points <=> $a->points;
             }
 
-            if ($a->goal_difference !== $b->goal_difference) {
-                return $b->goal_difference <=> $a->goal_difference;
+            if ($a->goalDifference !== $b->goalDifference) {
+                return $b->goalDifference <=> $a->goalDifference;
             }
 
-            return $b->goals_for <=> $a->goals_for;
+            return $b->goalsFor <=> $a->goalsFor;
         })->values();
     }
 }

@@ -23,7 +23,7 @@ class PlayAllResource extends JsonResource
         return [
             'message' => self::RESPONSE_MESSAGE,
             'data'    => [
-                'matches_played' => $this->resource->matches_played,
+                'matches_played' => $this->resource->matchesPlayed,
             ],
         ];
     }

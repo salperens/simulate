@@ -11,15 +11,14 @@ class FixtureData extends Data
 {
     public function __construct(
         public int                $id,
-        public int                $week_number,
-        public TeamData           $home_team,
-        public TeamData           $away_team,
-        public ?int               $home_score,
-        public ?int               $away_score,
+        public int                $weekNumber,
+        public TeamData           $homeTeam,
+        public TeamData           $awayTeam,
+        public ?int               $homeScore,
+        public ?int               $awayScore,
         #[WithCast(DateTimeInterfaceCast::class)]
-        public ?DateTimeInterface $played_at,
+        public ?DateTimeInterface $playedAt,
     )
     {
     }
 }
-

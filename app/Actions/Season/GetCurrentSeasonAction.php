@@ -29,10 +29,10 @@ readonly class GetCurrentSeasonAction
             year: $season->year,
             name: $season->name,
             status: $season->status,
-            start_date: $season->start_date,
-            end_date: $season->end_date,
-            current_week: $currentWeek,
-            total_weeks: $totalWeeks,
+            startDate: $season->start_date,
+            endDate: $season->end_date,
+            currentWeek: $currentWeek,
+            totalWeeks: $totalWeeks,
         );
     }
 
