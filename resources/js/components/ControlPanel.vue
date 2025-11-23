@@ -13,11 +13,11 @@
 
     <div v-if="seasonStatus === 'completed'" class="mb-4 p-3 bg-blue-50 border border-blue-200 rounded">
       <p class="text-blue-800 text-sm">
-        <strong>Season Completed:</strong> All matches for this season have been played.
+        <strong>Season Completed:</strong> All matches for this season have been played. You can view past weeks but cannot make changes.
       </p>
     </div>
 
-    <div v-if="seasonStatus === 'active'" class="space-y-4">
+    <div v-if="seasonStatus === 'active' || seasonStatus === 'completed'" class="space-y-4">
       <div class="flex flex-wrap gap-4 items-center">
         <label class="font-medium">Week:</label>
         <select
@@ -30,6 +30,7 @@
           </option>
         </select>
         <button
+          v-if="seasonStatus === 'active'"
           @click="playWeek"
           :disabled="loading || isCurrentWeekPlayed"
           class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
@@ -37,6 +38,7 @@
           Play This Week
         </button>
         <button
+          v-if="seasonStatus === 'active'"
           @click="nextWeek"
           :disabled="loading || !canGoToNextWeek"
           class="bg-purple-600 text-white px-6 py-2 rounded hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed"
@@ -45,7 +47,7 @@
         </button>
       </div>
 
-      <div class="flex gap-4">
+      <div v-if="seasonStatus === 'active'" class="flex gap-4">
         <button
           @click="playAll"
           :disabled="loading || isSeasonCompleted || canCompleteSeason"

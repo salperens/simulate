@@ -5,6 +5,8 @@ namespace App\Actions\League;
 use App\Actions\Match\SimulateWeekAction;
 use App\Actions\Prediction\CalculatePredictionsIfApplicableAction;
 use App\Data\League\PlayAllResponseData;
+use App\Enums\Season\SeasonStatusEnum;
+use App\Exceptions\Season\CannotPlayMatchesException;
 use App\Models\Fixture;
 use App\Models\Season;
 
@@ -19,6 +21,10 @@ readonly class PlayUnplayedWeeksAction
 
     public function execute(Season $season): PlayAllResponseData
     {
+        if ($season->status === SeasonStatusEnum::COMPLETED) {
+            throw CannotPlayMatchesException::seasonCompleted();
+        }
+
         $totalMatchesPlayed = 0;
 
         $weeksWithUnplayedFixtures = Fixture::query()

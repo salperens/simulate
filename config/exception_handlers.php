@@ -2,6 +2,7 @@
 
 use App\Exceptions\Handlers\ActiveSeasonExistsExceptionHandler;
 use App\Exceptions\Handlers\CannotCompleteSeasonExceptionHandler;
+use App\Exceptions\Handlers\CannotPlayMatchesExceptionHandler;
 use App\Exceptions\Handlers\CannotStartSeasonExceptionHandler;
 use App\Exceptions\Handlers\DefaultExceptionHandler;
 use App\Exceptions\Handlers\FixtureNotFoundExceptionHandler;
@@ -31,6 +32,7 @@ return [
         SeasonYearAlreadyExistsExceptionHandler::class,
         CannotStartSeasonExceptionHandler::class,
         CannotCompleteSeasonExceptionHandler::class,
+        CannotPlayMatchesExceptionHandler::class,
         DefaultExceptionHandler::class,
     ],
 ];
