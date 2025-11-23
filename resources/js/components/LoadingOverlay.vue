@@ -1,13 +1,13 @@
 <template>
   <Transition name="fade">
-    <div v-if="show" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
+    <div v-if="show" class="fixed inset-0 z-50 flex items-center justify-center bg-white/70 backdrop-blur-md">
       <div class="text-center">
         <img
           :src="penaltyGif"
           alt="Playing matches..."
           class="mx-auto w-32 h-32"
         />
-        <p class="mt-4 text-white text-lg font-semibold">{{ message }}</p>
+        <p class="mt-4 text-gray-900 text-lg font-semibold">{{ message }}</p>
       </div>
     </div>
   </Transition>
