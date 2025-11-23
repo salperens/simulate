@@ -241,6 +241,32 @@ test('it performs example action', function () {
 });
 ```
 
+### Season Configuration
+
+The application supports flexible team counts for seasons. You can create seasons with any number of teams (minimum 2). For example:
+
+- **4-team league**: As specified in project requirements, you can create a season with exactly 4 teams. The system will automatically generate fixtures in a round-robin format where each team plays every other team home and away.
+- **Custom team count**: You can create seasons with 2, 4, 6, 8, or any number of teams as needed.
+
+The fixture generation algorithm automatically handles:
+- Round-robin format (each team plays every other team)
+- Home and away matches
+- Proper week distribution
+- Support for odd number of teams (byes)
+
+**Example: Creating a 4-team season**
+```php
+// Via API
+POST /api/v1/seasons
+{
+  "year": 2024,
+  "name": "2024 Season",
+  "team_ids": [1, 2, 3, 4]
+}
+```
+
+This will create a season with 6 total weeks (each team plays 3 matches home and 3 matches away).
+
 ### Adding a New API Endpoint
 
 1. Create controller method:
