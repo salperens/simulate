@@ -1,4 +1,4 @@
-.PHONY: help build up down restart logs shell bash shell-root bash-root composer install migrate seed test test-pest test-unit test-feature test-filter test-coverage test-watch clean setup-ssl setup-full setup-hosts remove-hosts npm npm-install npm-dev npm-build check-npm
+.PHONY: help build up down restart logs logs-app logs-nginx logs-mysql shell bash shell-root bash-root composer install update artisan migrate migrate-fresh seed key cache-clear cache-config test test-pest test-unit test-feature test-filter test-coverage test-watch clean setup setup-ssl setup-full setup-hosts remove-hosts npm npm-install npm-dev npm-build check-npm ps stats mysql mysql-root opcache-status phpinfo storage-link
 
 help: ## Show this help message
 	@echo 'Usage: make [target]'
@@ -99,13 +99,18 @@ test-watch: ## Run tests in watch mode
 	docker-compose exec app ./vendor/bin/pest --watch
 
 setup: ## Initial setup (install dependencies, generate key, migrate, npm-install) - requires containers to be running
+	@if [ ! -f .env ]; then \
+		echo "Creating .env file from .env.example..."; \
+		cp .env.example .env || echo " ️  .env.example not found. Please create .env manually."; \
+	fi
 	docker-compose exec app composer install
 	@if command -v npm > /dev/null; then \
 		$(MAKE) npm-install; \
 	else \
-		echo "⚠️  npm not found. Skipping npm install. Install Node.js to enable frontend features."; \
+		echo "  npm not found. Skipping npm install. Install Node.js to enable frontend features."; \
 	fi
 	docker-compose exec app php artisan key:generate
+	docker-compose exec app php artisan storage:link || true
 	docker-compose exec app php artisan migrate
 
 clean: ## Remove all containers, volumes and images
@@ -129,6 +134,31 @@ opcache-status: ## Check OPcache status
 phpinfo: ## Show PHP configuration
 	docker-compose exec app php -i | grep -i opcache
 
+storage-link: ## Create storage symbolic link
+	docker-compose exec app php artisan storage:link
+
+check-docker: ## Check if Docker is installed and running
+	@if ! command -v docker > /dev/null; then \
+		echo "  Docker is not installed."; \
+		echo ""; \
+		echo "Please install Docker:"; \
+		echo "  macOS: https://docs.docker.com/desktop/install/mac-install/"; \
+		echo "  Linux: https://docs.docker.com/engine/install/"; \
+		echo ""; \
+		exit 1; \
+	fi
+	@if ! docker info > /dev/null 2>&1; then \
+		echo "  Docker is not running."; \
+		echo ""; \
+		echo "Please start Docker Desktop or Docker daemon."; \
+		echo ""; \
+		exit 1; \
+	fi
+	@echo "  Docker is installed and running"
+
+check-requirements: check-docker check-npm ## Check all requirements (Docker, npm)
+	@echo "  All requirements met"
+
 setup-hosts: ## Add lig-simulation.local to hosts file (requires sudo)
 	@echo "Adding lig-simulation.local to /etc/hosts..."
 	@if grep -q "lig-simulation.local" /etc/hosts; then \
@@ -144,7 +174,7 @@ remove-hosts: ## Remove lig-simulation.local from hosts file (requires sudo)
 	@echo "lig-simulation.local removed from /etc/hosts"
 
 setup-ssl: ## Generate SSL certificates using mkcert
-	@echo "🔐 Setting up SSL certificates..."
+	@echo "  Setting up SSL certificates..."
 	@if ! command -v mkcert > /dev/null; then \
 		echo "mkcert is not installed. Installing via Homebrew..."; \
 		brew install mkcert || (echo "Please install mkcert manually: brew install mkcert" && exit 1); \
@@ -196,33 +226,61 @@ npm: check-npm ## Run npm command (usage: make npm CMD="install")
 
 setup-full: ## Complete setup (hosts, SSL, build, up, install, key, migrate, npm-install)
 	@echo "Starting full setup..."
+	@echo ""
+	@echo "Step 1/7: Setting up hosts file..."
 	@$(MAKE) setup-hosts
+	@echo ""
+	@echo "Step 2/7: Setting up SSL certificates..."
 	@$(MAKE) setup-ssl
-	@echo "Building Docker images..."
+	@echo ""
+	@echo "Step 3/7: Creating .env file..."
+	@if [ ! -f .env ]; then \
+		if [ -f .env.example ]; then \
+			cp .env.example .env; \
+			echo "  Created .env from .env.example"; \
+		else \
+			echo "  .env.example not found. Please create .env manually."; \
+		fi \
+	else \
+			echo "  .env file already exists"; \
+	fi
+	@echo ""
+	@echo "Step 4/7: Building Docker images..."
 	@$(MAKE) build
-	@echo "Starting containers..."
+	@echo ""
+	@echo "Step 5/7: Starting containers..."
 	@$(MAKE) up
-	@echo "Waiting for services to be ready..."
+	@echo ""
+	@echo "Step 6/7: Waiting for services to be ready..."
 	@sleep 10
-	@echo "Installing PHP dependencies..."
+	@echo ""
+	@echo "Step 7/7: Installing dependencies and configuring..."
+	@echo "  - Installing PHP dependencies..."
 	@$(MAKE) install
 	@if command -v npm > /dev/null; then \
-		echo "Installing npm dependencies..."; \
+		echo "  - Installing npm dependencies..."; \
 		$(MAKE) npm-install; \
 	else \
-		echo "npm not found. Skipping npm install."; \
-		echo "Install Node.js to enable frontend features: brew install node"; \
+		echo "     npm not found. Skipping npm install."; \
+		echo "     Install Node.js to enable frontend features: brew install node"; \
 	fi
-	@echo "Generating application key..."
+	@echo "  - Generating application key..."
 	@$(MAKE) key
-	@echo "Running migrations..."
+	@echo "  - Creating storage link..."
+	@docker-compose exec app php artisan storage:link || true
+	@echo "  - Running migrations..."
 	@$(MAKE) migrate
 	@echo ""
-	@echo "Setup complete! Access your application at:"
-	@echo "https://lig-simulation.local/"
+	@echo "  Setup complete!"
+	@echo ""
+	@echo "  Access your application at:"
+	@echo "   HTTPS: https://lig-simulation.local/"
+	@echo "   HTTP:  http://localhost:8000/"
 	@echo ""
 	@if command -v npm > /dev/null; then \
-		echo "To start the frontend development server, run:"; \
-		echo "make npm-dev"; \
+		echo "  To start the frontend development server, run:"; \
+		echo "   make npm-dev"; \
+		echo ""; \
 	fi
+	@echo "  For more commands, run: make help"
 

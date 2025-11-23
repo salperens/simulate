@@ -1,59 +1,298 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Lig Simulation
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A football league simulation application built with Laravel and Vue.js.
 
-## About Laravel
+## Features
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- **Season Management**: Create, start, and complete seasons
+- **Team Management**: Manage teams with power ratings and attributes
+- **Match Simulation**: Simulate matches with realistic outcomes
+- **Standings Calculation**: Automatic standings calculation with points, goal difference, and goals for
+- **Championship Predictions**: Monte Carlo simulation for championship predictions (available in last 3 weeks)
+- **Match Result Editing**: Edit match results and recalculate standings
+- **RESTful API**: Complete API for all operations
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Requirements
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- Docker and Docker Compose
+- Node.js and npm (for frontend development)
+- Make (optional, but recommended for easier setup)
 
-## Learning Laravel
+## Quick Start
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+### 1. Clone the repository
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+```bash
+git clone <repository-url>
+cd lig-simulation
+```
 
-## Laravel Sponsors
+### 2. Run full setup (recommended)
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+This will set up everything automatically:
 
-### Premium Partners
+```bash
+make setup-full
+```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+This command will:
+- Add `lig-simulation.local` to your hosts file
+- Generate SSL certificates
+- Build Docker images
+- Start containers
+- Install PHP dependencies
+- Install npm dependencies
+- Generate application key
+- Run database migrations
 
-## Contributing
+### 3. Access the application
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+- **HTTPS**: https://lig-simulation.local/
+- **HTTP**: http://localhost:8000/
 
-## Code of Conduct
+### 4. Start frontend development server (optional)
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```bash
+make npm-dev
+```
 
-## Security Vulnerabilities
+## Manual Setup
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+If you prefer to set up manually:
+
+### 1. Copy environment file
+
+```bash
+cp .env.example .env
+```
+
+### 2. Build and start containers
+
+```bash
+make build
+make up
+```
+
+### 3. Install dependencies
+
+```bash
+make install
+make npm-install
+```
+
+### 4. Generate application key
+
+```bash
+make key
+```
+
+### 5. Run migrations
+
+```bash
+make migrate
+```
+
+### 6. (Optional) Seed database
+
+```bash
+make seed
+```
+
+## Development
+
+### Running Tests
+
+```bash
+# Run all tests
+make test-pest
+
+# Run unit tests only
+make test-unit
+
+# Run feature tests only
+make test-feature
+
+# Run specific test
+make test-filter FILTER="SimulateFixture"
+
+# Run tests with coverage
+make test-coverage
+
+# Run tests in watch mode
+make test-watch
+```
+
+### Common Commands
+
+```bash
+# View logs
+make logs
+make logs-app
+make logs-nginx
+make logs-mysql
+
+# Access shell
+make bash
+make bash-root
+
+# Run artisan commands
+make artisan CMD="migrate"
+make artisan CMD="tinker"
+
+# Run composer commands
+make composer CMD="require package/name"
+
+# Clear caches
+make cache-clear
+
+# Cache configuration
+make cache-config
+
+# Connect to MySQL
+make mysql
+make mysql-root
+```
+
+### Frontend Development
+
+```bash
+# Install npm dependencies
+make npm-install
+
+# Start development server
+make npm-dev
+
+# Build for production
+make npm-build
+```
+
+## Project Structure
+
+```
+app/
+├── Actions/          # Business logic actions
+├── Data/            # Data Transfer Objects (DTOs)
+├── Enums/           # Enumerations
+├── Exceptions/      # Custom exceptions and handlers
+├── Http/            # Controllers, Requests, Resources
+├── MatchSimulation/ # Match simulation logic
+├── Models/          # Eloquent models
+├── Prediction/      # Prediction algorithms
+└── Providers/       # Service providers
+
+tests/
+├── Feature/         # Feature tests (API endpoints)
+└── Unit/            # Unit tests (business logic)
+```
+
+## API Endpoints
+
+### Seasons
+- `GET /api/v1/seasons` - List all seasons
+- `GET /api/v1/seasons/{id}` - Get season by ID
+- `POST /api/v1/seasons` - Create new season
+- `POST /api/v1/seasons/{id}/start` - Start season
+- `POST /api/v1/seasons/{id}/complete` - Complete season
+- `GET /api/v1/season/current` - Get current season
+
+### Standings
+- `GET /api/v1/standings` - Get standings (current season)
+- `GET /api/v1/standings?season_id={id}` - Get standings for specific season
+
+### Fixtures
+- `GET /api/v1/fixtures/week/{week}` - Get fixtures for week
+- `PUT /api/v1/fixtures/{id}` - Update fixture result
+
+### Predictions
+- `GET /api/v1/predictions/week/{week}` - Get predictions for week
+- `GET /api/v1/predictions/current` - Get predictions for current week
+
+### Play
+- `POST /api/v1/league/week/{week}/play` - Play specific week
+- `POST /api/v1/league/play-all` - Play all remaining matches
+
+### Teams
+- `GET /api/v1/teams` - List all teams
+
+## Testing
+
+The project uses Pest PHP for testing. Test coverage includes:
+
+- **Unit Tests**: 157 tests covering Actions, Data classes, Models, and business logic
+- **Feature Tests**: 49 tests covering all API endpoints and error scenarios
+
+Run tests with:
+
+```bash
+make test-pest
+```
+
+## Environment Variables
+
+Key environment variables (see `.env.example` for full list):
+
+- `APP_ENV`: Application environment (local, production)
+- `APP_DEBUG`: Debug mode
+- `DB_CONNECTION`: Database connection (mysql, sqlite)
+- `DB_HOST`: Database host
+- `DB_DATABASE`: Database name
+- `DB_USERNAME`: Database username
+- `DB_PASSWORD`: Database password
+
+## Docker Services
+
+- **app**: PHP-FPM application container
+- **nginx**: Web server
+- **mysql**: MySQL 8.0 database
+
+## Troubleshooting
+
+### Containers won't start
+
+```bash
+# Check container status
+make ps
+
+# View logs
+make logs
+
+# Rebuild containers
+make build
+```
+
+### Database connection issues
+
+```bash
+# Check MySQL logs
+make logs-mysql
+
+# Connect to MySQL
+make mysql
+
+# Verify database exists
+SHOW DATABASES;
+```
+
+### Permission issues
+
+```bash
+# Fix storage permissions
+make bash-root
+chown -R www-data:www-data storage bootstrap/cache
+chmod -R 775 storage bootstrap/cache
+```
+
+### npm issues
+
+```bash
+# Check npm installation
+make check-npm
+
+# Reinstall dependencies
+rm -rf node_modules package-lock.json
+make npm-install
+```
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+This project is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
