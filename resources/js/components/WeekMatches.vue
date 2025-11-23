@@ -9,7 +9,7 @@
         v-for="match in matches"
         :key="match.id"
         :match="match"
-        :canEdit="seasonStatus !== 'completed'"
+        :canEdit="seasonStatus !== 'completed' && match.played_at !== null"
         @edit="handleEdit"
       />
     </div>
@@ -70,10 +70,8 @@ const handleSaveFixture = async (data) => {
     await new Promise((resolve, reject) => {
       emit('update', data, resolve, reject)
     })
-    // Başarılı güncelleme sonrası modal'ı kapat
     handleCloseModal()
   } catch (error) {
-    // Hata durumunda modal açık kalır, kullanıcı tekrar deneyebilir
     throw error
   } finally {
     updatingFixture.value = false

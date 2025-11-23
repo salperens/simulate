@@ -7,10 +7,10 @@ use App\Actions\Prediction\CalculatePredictionsIfApplicableAction;
 use App\Data\Fixture\FixtureData;
 use App\Data\Fixture\TeamData;
 use App\Exceptions\Fixture\FixtureNotFoundException;
+use App\Exceptions\Fixture\FixtureNotPlayedException;
 use App\Models\ChampionshipPrediction;
 use App\Models\Fixture;
 use App\Models\Season;
-use Illuminate\Support\Carbon;
 
 readonly class UpdateFixtureAction
 {
@@ -38,10 +38,13 @@ readonly class UpdateFixtureAction
             throw FixtureNotFoundException::create($fixtureId);
         }
 
+        if ($fixture->played_at === null) {
+            throw FixtureNotPlayedException::create();
+        }
+
         $fixture->update([
             'home_score' => $homeScore,
             'away_score' => $awayScore,
-            'played_at'  => $fixture->played_at ?? Carbon::now(),
         ]);
 
         $this->recalculateStandings($fixture->season);

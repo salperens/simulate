@@ -6,6 +6,7 @@ use App\Exceptions\Handlers\CannotPlayMatchesExceptionHandler;
 use App\Exceptions\Handlers\CannotStartSeasonExceptionHandler;
 use App\Exceptions\Handlers\DefaultExceptionHandler;
 use App\Exceptions\Handlers\FixtureNotFoundExceptionHandler;
+use App\Exceptions\Handlers\FixtureNotPlayedExceptionHandler;
 use App\Exceptions\Handlers\PredictionNotAvailableExceptionHandler;
 use App\Exceptions\Handlers\SeasonNotFoundExceptionHandler;
 use App\Exceptions\Handlers\SeasonYearAlreadyExistsExceptionHandler;
@@ -27,6 +28,7 @@ return [
         ValidationExceptionHandler::class,
         PredictionNotAvailableExceptionHandler::class,
         FixtureNotFoundExceptionHandler::class,
+        FixtureNotPlayedExceptionHandler::class,
         SeasonNotFoundExceptionHandler::class,
         ActiveSeasonExistsExceptionHandler::class,
         SeasonYearAlreadyExistsExceptionHandler::class,
