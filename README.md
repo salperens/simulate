@@ -9,8 +9,9 @@ A football league simulation application built with Laravel and Vue.js.
 - **Match Simulation**: Simulate matches with realistic outcomes
 - **Standings Calculation**: Automatic standings calculation with points, goal difference, and goals for
 - **Championship Predictions**: Monte Carlo simulation for championship predictions (available in last 3 weeks)
-- **Match Result Editing**: Edit match results and recalculate standings
+- **Match Result Editing**: Edit match results and recalculate standings (disabled for completed seasons)
 - **RESTful API**: Complete API for all operations
+- **Test Coverage**: Comprehensive test suite with 92.1% code coverage
 
 ## Requirements
 
@@ -198,10 +199,12 @@ tests/
 ### Standings
 - `GET /api/v1/standings` - Get standings (current season)
 - `GET /api/v1/standings?season_id={id}` - Get standings for specific season
+- `GET /api/v1/standings?week={week}` - Get standings up to specific week
+- `GET /api/v1/standings?season_id={id}&week={week}` - Get standings for season up to week
 
 ### Fixtures
-- `GET /api/v1/fixtures/week/{week}` - Get fixtures for week
-- `PUT /api/v1/fixtures/{id}` - Update fixture result
+- `GET /api/v1/fixtures/week/{week}` - Get fixtures for week (optional: `?season_id={id}`)
+- `PUT /api/v1/fixtures/{id}` - Update fixture result (body: `home_score`, `away_score`)
 
 ### Predictions
 - `GET /api/v1/predictions/week/{week}` - Get predictions for week
@@ -216,15 +219,18 @@ tests/
 
 ## Testing
 
-The project uses Pest PHP for testing. Test coverage includes:
+The project uses Pest PHP for testing with PCOV extension for code coverage. Test coverage includes:
 
-- **Unit Tests**: 157 tests covering Actions, Data classes, Models, and business logic
-- **Feature Tests**: 49 tests covering all API endpoints and error scenarios
+- **Total Tests**: 213 tests (212 passed, 1 skipped)
+- **Unit Tests**: 163 tests covering Actions, Data classes, Models, and business logic
+- **Feature Tests**: 50 tests covering all API endpoints and error scenarios
+- **Code Coverage**: 92.1% overall coverage
 
 Run tests with:
 
 ```bash
 make test
+make test-coverage  # With coverage report
 ```
 
 ## Environment Variables
@@ -241,9 +247,20 @@ Key environment variables (see `.env.example` for full list):
 
 ## Docker Services
 
-- **app**: PHP-FPM application container
+- **app**: PHP-FPM application container (PHP 8.4 with PCOV extension)
 - **nginx**: Web server
 - **mysql**: MySQL 8.0 database
+
+## Documentation
+
+For detailed technical documentation, see the [docs](./docs/) directory:
+
+- [Architecture](./docs/Architecture.md) - System architecture and design patterns
+- [API Documentation](./docs/API.md) - Complete API reference
+- [Database Schema](./docs/Database.md) - Database structure and relationships
+- [Development Guide](./docs/Development.md) - Development setup and guidelines
+- [Testing Guide](./docs/Testing.md) - Testing strategies and best practices
+- [Deployment Guide](./docs/Deployment.md) - Production deployment instructions
 
 ## Troubleshooting
 
