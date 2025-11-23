@@ -37,6 +37,7 @@
         <WeekMatches
           :week="currentWeek"
           :matches="matches"
+          :seasonStatus="selectedSeason.status"
           @update="handleUpdateFixture"
         />
         <ChampionshipPredictions

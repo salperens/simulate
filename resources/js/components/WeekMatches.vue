@@ -9,6 +9,7 @@
         v-for="match in matches"
         :key="match.id"
         :match="match"
+        :canEdit="seasonStatus !== 'completed'"
         @edit="handleEdit"
       />
     </div>
@@ -39,6 +40,10 @@ const props = defineProps({
   },
   matches: {
     type: Array,
+    required: true,
+  },
+  seasonStatus: {
+    type: String,
     required: true,
   },
 })

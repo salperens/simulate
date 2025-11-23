@@ -27,6 +27,7 @@
         Played: {{ formatDate(match.played_at) }}
       </div>
       <button
+        v-if="canEdit"
         @click="$emit('edit', match)"
         class="ml-auto px-3 py-1.5 text-sm bg-green-600 text-white rounded-lg hover:bg-green-700 transition flex items-center gap-1"
       >
@@ -44,6 +45,10 @@ defineProps({
   match: {
     type: Object,
     required: true,
+  },
+  canEdit: {
+    type: Boolean,
+    default: true,
   },
 })
 
