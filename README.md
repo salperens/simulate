@@ -174,7 +174,7 @@ make npm-build
 
 ```
 app/
-├── Actions/          # Business logic actions
+├── Actions/         # Business logic actions
 ├── Data/            # Data Transfer Objects (DTOs)
 ├── Enums/           # Enumerations
 ├── Exceptions/      # Custom exceptions and handlers
@@ -224,7 +224,7 @@ tests/
 
 The project uses Pest PHP for testing with PCOV extension for code coverage. Test coverage includes:
 
-- **Total Tests**: 213 tests (212 passed, 1 skipped)
+- **Total Tests**: 213 tests
 - **Unit Tests**: 163 tests covering Actions, Data classes, Models, and business logic
 - **Feature Tests**: 50 tests covering all API endpoints and error scenarios
 - **Code Coverage**: 92.1% overall coverage
